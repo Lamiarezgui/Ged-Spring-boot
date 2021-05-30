@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef" xmlns:modeler="http://activiti.com/modeler" modeler:version="1.0en" modeler:exportDateTime="20210525102445742" modeler:modelId="5005" modeler:modelVersion="1" modeler:modelLastUpdated="1621934678765">
+    <process id="TaskManager" name="TaskManager" isExecutable="true">
+        <startEvent id="start" activiti:formKey="2003">
+            <extensionElements>
+                <modeler:form-reference-id><![CDATA[2003]]></modeler:form-reference-id>
+                <modeler:form-reference-name><![CDATA[Taches]]></modeler:form-reference-name>
+                <modeler:editor-resource-id><![CDATA[sid-621A463D-4E2D-4796-87F2-F2144C96B0EA]]></modeler:editor-resource-id>
+            </extensionElements>
+        </startEvent>
+        <endEvent id="end">
+            <extensionElements>
+                <modeler:editor-resource-id><![CDATA[sid-B16EBA04-DC46-4416-8A01-8C0BB00E17F2]]></modeler:editor-resource-id>
+            </extensionElements>
+        </endEvent>
+        <sequenceFlow id="sid-D804CEBC-150B-424C-981C-4519814A909B" sourceRef="start" targetRef="end">
+            <extensionElements>
+                <modeler:editor-resource-id><![CDATA[sid-D804CEBC-150B-424C-981C-4519814A909B]]></modeler:editor-resource-id>
+            </extensionElements>
+        </sequenceFlow>
+    </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_TaskManager">
+        <bpmndi:BPMNPlane bpmnElement="TaskManager" id="BPMNPlane_TaskManager">
+            <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+                <omgdc:Bounds height="30.0" width="30.0" x="98.5" y="99.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+                <omgdc:Bounds height="28.0" width="28.0" x="405.0" y="107.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="sid-D804CEBC-150B-424C-981C-4519814A909B" id="BPMNEdge_sid-D804CEBC-150B-424C-981C-4519814A909B">
+                <omgdi:waypoint x="128.4960639197326" y="114.3436086659186"/>
+                <omgdi:waypoint x="405.00367367491623" y="120.67929857847598"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>
