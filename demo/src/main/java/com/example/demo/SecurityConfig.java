@@ -4,6 +4,7 @@ import com.example.demo.Services.UsersService;
 import com.example.demo.jwt.AuthEntryPointJwt;
 import com.example.demo.jwt.AuthTokenFilter;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,14 +28,14 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
+@NoArgsConstructor
 @EnableGlobalMethodSecurity(
         securedEnabled = true,
         jsr250Enabled = true,
         prePostEnabled = true)
 
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UsersService usersService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Autowired
     private UserDetailsService myUserDetailsService;
 
@@ -82,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/modifpass/*").authenticated()
                 .antMatchers("/forgot-password/*").permitAll()
                 .antMatchers("/reset-password/*").permitAll()
-                .antMatchers("/ws/info","/ws/**","/chat/**","/messages/**").permitAll()
+                .antMatchers("/ws/info/*","/ws/*","/chat/*","/messages/*").permitAll()
                 .and()
                 .rememberMe();
 
@@ -95,7 +96,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT","OPTIONS","HEAD","PATCH","MESSAGE"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT","OPTIONS","HEAD","PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
