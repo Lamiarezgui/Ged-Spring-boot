@@ -52,6 +52,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(myUserDetailsService);
     }
 
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT", "OPTIONS", "HEAD", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     @Override
     @Bean
@@ -83,7 +93,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/modifpass/*").authenticated()
                 .antMatchers("/forgot-password/*").permitAll()
                 .antMatchers("/reset-password/*").permitAll()
-                .antMatchers("/ws/info/*","/ws/*","/chat/*","/messages/*").permitAll()
+                .antMatchers("/ws/info/*", "/ws/*", "/chat/*", "/messages/*").permitAll()
                 .and()
                 .rememberMe();
 
@@ -91,63 +101,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT","OPTIONS","HEAD","PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-/*
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(daoAuthenticationProvider());
-    }
-
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider =
-                new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(bCryptPasswordEncoder);
-        provider.setUserDetailsService(usersService);
-        return provider;
-    }
-
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-
-       http.httpBasic()
-                .and()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(
-                SessionCreationPolicy.STATELESS)
-                .and()
-                .exceptionHandling()
-                .and()
-                .authorizeRequests()
-                .antMatchers("/*").permitAll()
-                .antMatchers("/files").hasAnyRole("USER","ADMIN")
-                .antMatchers("/files/*").permitAll()
-                .antMatchers("/ajoutUser").authenticated()
-                .antMatchers("/User/*").authenticated()
-                .antMatchers("/users/*").authenticated()
-                .antMatchers("/groupe/*").authenticated()
-                .antMatchers("/groupe/user/*").authenticated()
-                .antMatchers("/files/versions/*").permitAll()
-                .antMatchers("/files/ListVersions/*").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin().usernameParameter("email").defaultSuccessUrl("/files").permitAll()
-                .failureHandler(new SimpleUrlAuthenticationFailureHandler())
-        .and()
-        .logout().permitAll();
-    }
-*/
 
 }
