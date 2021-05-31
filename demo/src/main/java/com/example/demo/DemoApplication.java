@@ -17,15 +17,15 @@ import org.springframework.security.config.annotation.authentication.configurati
 @EnableScheduling
 @EnableAsync
 public class DemoApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
     @Primary
     @Bean
     public TaskExecutor primaryTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         return executor;
     }
-    public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
-    }
-
 
 }
