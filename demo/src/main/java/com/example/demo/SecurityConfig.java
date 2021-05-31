@@ -82,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/modifpass/*").authenticated()
                 .antMatchers("/forgot-password/*").permitAll()
                 .antMatchers("/reset-password/*").permitAll()
-                .antMatchers("/start-process").permitAll()
+                .antMatchers("/ws/info","/ws/**","/chat/**","/messages/**").permitAll()
                 .and()
                 .rememberMe();
 
