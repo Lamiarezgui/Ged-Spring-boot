@@ -32,7 +32,7 @@ public class ActivitiController {
                 .count();
     }
     @GetMapping("/getIds")
-    public JSONObject test() {
+    public String test() {
 
 
         JSONObject allTasks = new JSONObject();
@@ -47,6 +47,9 @@ public class ActivitiController {
                 JSONObject userWFDetails = new JSONObject();
 
                 userWFDetails.put("taskId ", temp.getId());
+                userWFDetails.put("task name ", temp.getName());
+                userWFDetails.put("task Due Date ", temp.getDueDate());
+                userWFDetails.put("task Create Time ", temp.getCreateTime());
                 userWFDetails.put("taskDesc ", temp.getDescription());
                 userWFDetails.put("InstanceId ", temp.getProcessInstanceId());
 
@@ -59,7 +62,7 @@ public class ActivitiController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return allTasks;
+        return allTasks.toString();
     }
     @GetMapping("/get-tasks/{processInstanceId}")
     public List<TaskRepresentation> getTasks(@PathVariable String processInstanceId) {
@@ -68,11 +71,11 @@ public class ActivitiController {
                 .list();
 
         return usertasks.stream()
-                .map(task -> new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId()))
+                .map(task -> new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId(),task.getCreateTime(),task.getAssignee(),task.getDueDate(),task.getDescription(),task.getOwner()))
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/complete-task-A/{processInstanceId}")
+    @GetMapping("/complete-task/{processInstanceId}")
     public void completeTaskA(@PathVariable String processInstanceId) {
         Task task = taskService.createTaskQuery()
                 .processInstanceId(processInstanceId)

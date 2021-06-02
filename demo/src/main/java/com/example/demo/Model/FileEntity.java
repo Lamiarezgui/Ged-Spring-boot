@@ -37,6 +37,8 @@ public class FileEntity {
     @ManyToOne(cascade = CascadeType.REMOVE)
     private Users user;
     @ManyToOne
+    private ChatMessage chatMessage;
+    @ManyToOne
     private Archive archive;
     @ManyToOne
     private Groupe groupe;

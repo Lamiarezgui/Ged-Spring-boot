@@ -25,6 +25,8 @@ public class ChatMessage {
     private String senderName;
     private String recipientName;
     private String content;
+    @OneToMany
+    private List<FileEntity> files;
     private Date timestamp;
     private MessageStatus status;
 }
