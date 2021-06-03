@@ -128,6 +128,24 @@ public class FilesController {
                 .body(fileEntity.getData());
     }
 
+    //visualiser un fichier
+    @GetMapping("viewFile/{id}")
+    public ResponseEntity<byte[]> viewFile(@PathVariable String id) {
+        Optional<FileEntity> fileEntityOptional = fileService.getFile(id);
+
+        if (!fileEntityOptional.isPresent()) {
+            return ResponseEntity.notFound()
+                    .build();
+        }
+
+
+        FileEntity fileEntity = fileEntityOptional.get();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(fileEntity.getContentType()))
+                .body(fileEntity.getData());
+    }
+
   /*  @DeleteMapping("/{id}")
     public String deleteFile(@PathVariable(value = "id") String id)
             throws ResourceNotFoundException {

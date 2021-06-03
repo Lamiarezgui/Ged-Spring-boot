@@ -1,5 +1,6 @@
 package com.example.demo.Controller;
 
+import com.example.demo.Model.FileEntity;
 import com.example.demo.Model.Versions;
 import com.example.demo.Repository.VersionRepository;
 import com.example.demo.ResourceNotFoundException;
@@ -73,7 +74,25 @@ public class VersionController {
                 .contentType(MediaType.valueOf(versions.getContentType()))
                 .body(versions.getData());
     }
-//supprimer une version
+    //visualiser une version
+    @GetMapping("viewVersion/{id}")
+    public ResponseEntity<byte[]> viewFile(@PathVariable String id) {
+        Optional<Versions> versionsOptional = versionsService.getVersions(id);
+
+        if (!versionsOptional.isPresent()) {
+            return ResponseEntity.notFound()
+                    .build();
+        }
+
+
+        Versions versions = versionsOptional.get();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(versions.getContentType()))
+                .body(versions.getData());
+    }
+
+    //supprimer une version
     @DeleteMapping("/{id}")
     public String deleteVersion(@PathVariable(value = "id") String id)
             throws ResourceNotFoundException {
