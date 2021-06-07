@@ -1,16 +1,22 @@
 package com.example.demo.activiti;
 
+import org.activiti.engine.FormService;
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.impl.util.json.JSONArray;
 import org.activiti.engine.impl.util.json.JSONObject;
+import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Task;
+import org.activiti.engine.form.AbstractFormType;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -22,13 +28,31 @@ public class ActivitiController {
 
     @Autowired
     private TaskService taskService;
+   private HistoryService historyService;
 
-    @GetMapping("/start-process")
-    public String startProcess() {
-        runtimeService.startProcessInstanceByKey("TaskManager");
+    //ajouter un nouveau process et les variables
+    @PostMapping("/start-process")
+    public String startProcess(@RequestBody FormRepresentation formRepresentation) {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("task", formRepresentation.getTask());
+        variables.put("de", formRepresentation.getStart());
+        variables.put("description",formRepresentation.getDescription());
+        variables.put("ddl",formRepresentation.getDdl());
+        variables.put("employe", formRepresentation.getEmploye());
+        runtimeService.startProcessInstanceByKey("gestiondestaches", variables);
+
         return "Process started. Number of currently running process instances = " + runtimeService.createProcessInstanceQuery()
                 .count();
     }
+
+    //get les variables de chaque process
+    @GetMapping("/var/{processInstanceId}")
+    public Map<String, Object> getVariables(@PathVariable String processInstanceId) {
+        return taskService.getVariables(processInstanceId);
+    }
+
+
+    //afficher tous les tasks et leurs details
     @GetMapping("/getIds")
     public String test() {
 
@@ -36,24 +60,19 @@ public class ActivitiController {
         JSONObject allTasks = new JSONObject();
 
         try {
-            List<Task> wft=taskService.createTaskQuery()
+            List<Task> wft = taskService.createTaskQuery()
                     .list();
 
+
             JSONArray ja = new JSONArray();
-            System.out.println("WF sizes = "+wft.size());
-            for (Task  temp : wft) {
+            System.out.println("WF sizes = " + wft.size());
+            for (Task temp : wft) {
                 JSONObject userWFDetails = new JSONObject();
 
                 userWFDetails.put("taskId ", temp.getId());
                 userWFDetails.put("task name ", temp.getName());
-                userWFDetails.put("task Due Date ", temp.getDueDate());
-                userWFDetails.put("task Create Time ", temp.getCreateTime());
-                userWFDetails.put("taskDesc ", temp.getDescription());
                 userWFDetails.put("InstanceId ", temp.getProcessInstanceId());
-
-                System.out.println("tasks- "+temp);
-                System.out.println("task id- "+temp.getId());
-                System.out.println("instance id- "+temp.getProcessInstanceId());
+                userWFDetails.put("variables ", taskService.getVariables(temp.getId()));
                 ja.put(userWFDetails);
             }
             allTasks.put("userTasksDetails", ja);
@@ -62,6 +81,20 @@ public class ActivitiController {
         }
         return allTasks.toString();
     }
+//afficher les tasks d'un user
+    @GetMapping("/get-task/{id}")
+    public List<TaskRepresentation> getTasksbyUser(@PathVariable long id) {
+
+        List<Task> usertasks = taskService.createTaskQuery()
+                .taskCandidateOrAssigned(String.valueOf(id))
+                .list();
+
+        return usertasks.stream()
+                .map(task -> new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId(), taskService.getVariables(task.getId())))
+                .collect(Collectors.toList());
+    }
+
+    //afficher un task de process avec l'instance process id
     @GetMapping("/get-tasks/{processInstanceId}")
     public List<TaskRepresentation> getTasks(@PathVariable String processInstanceId) {
         List<Task> usertasks = taskService.createTaskQuery()
@@ -69,10 +102,19 @@ public class ActivitiController {
                 .list();
 
         return usertasks.stream()
-                .map(task -> new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId(),task.getCreateTime(),task.getAssignee(),task.getDueDate(),task.getDescription(),task.getOwner()))
+                .map(task -> new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId(), task.getAssignee(), taskService.getVariables(task.getId())))
                 .collect(Collectors.toList());
     }
 
+    //get complete tasks for one user
+    @GetMapping("/completeTasks/{id}")
+    public List<TaskRepresentation> getCompletedTaks(@PathVariable long id) {
+        List<Task> usertasks = Collections.singletonList((Task) historyService.createHistoricTaskInstanceQuery().finished().taskAssignee(String.valueOf(id)).list());
+        return usertasks.stream()
+                .map(task -> new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId(), task.getAssignee(), taskService.getVariables(task.getId())))
+                .collect(Collectors.toList());
+    }
+    //terminer le task
     @GetMapping("/complete-task/{processInstanceId}")
     public void completeTaskA(@PathVariable String processInstanceId) {
         Task task = taskService.createTaskQuery()
@@ -81,7 +123,5 @@ public class ActivitiController {
         taskService.complete(task.getId());
         logger.info("Task completed");
     }
-    @PutMapping("/addProcess/{processInstanceId}")
-    public void addProcess(@PathVariable String processInstanceId, @RequestBody TaskRepresentation task){
-    }
+
 }

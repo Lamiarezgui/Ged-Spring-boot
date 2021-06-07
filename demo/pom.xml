@@ -138,6 +138,11 @@
             <artifactId>spring-messaging</artifactId>
             <version>5.2.5.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.18</version>
+        </dependency>
 
 
     </dependencies>

@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="gestiondestaches" name="Gestion des taches" isExecutable="true">
+    <startEvent id="start" activiti:formKey="2003">
+      <extensionElements>
+        <modeler:form-reference-id xmlns:modeler="http://activiti.com/modeler"><![CDATA[2003]]></modeler:form-reference-id>
+        <modeler:form-reference-name xmlns:modeler="http://activiti.com/modeler"><![CDATA[Taches]]></modeler:form-reference-name>
+      </extensionElements>
+    </startEvent>
+    <sequenceFlow id="sequenceFlow1" sourceRef="start" targetRef="human-step-1621434530432-170"/>
+    <userTask id="human-step-1621434530432-170" name="assigner a un user" activiti:assignee="${employe}" activiti:formKey="2003">
+      <extensionElements>
+        <modeler:allow-send-email xmlns:modeler="http://activiti.com/modeler"><![CDATA[true]]></modeler:allow-send-email>
+        <modeler:email-template xmlns:modeler="http://activiti.com/modeler" email-template-type="custom" email-template-subject="Assigner une tache"><![CDATA[cette tache est assigne a vous]]></modeler:email-template>
+        <modeler:activiti-idm-assignee-field xmlns:modeler="http://activiti.com/modeler"><![CDATA[employe]]></modeler:activiti-idm-assignee-field>
+        <modeler:initiator-can-complete xmlns:modeler="http://activiti.com/modeler"><![CDATA[true]]></modeler:initiator-can-complete>
+        <modeler:assignee-field-info-name xmlns:modeler="http://activiti.com/modeler"><![CDATA[employe]]></modeler:assignee-field-info-name>
+        <modeler:form-reference-id xmlns:modeler="http://activiti.com/modeler"><![CDATA[2003]]></modeler:form-reference-id>
+        <modeler:form-reference-name xmlns:modeler="http://activiti.com/modeler"><![CDATA[Taches]]></modeler:form-reference-name>
+      </extensionElements>
+    </userTask>
+    <endEvent id="end"/>
+    <sequenceFlow id="sequenceFlow2" sourceRef="human-step-1621434530432-170" targetRef="end"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_gestiondestaches">
+    <bpmndi:BPMNPlane bpmnElement="gestiondestaches" id="BPMNPlane_gestiondestaches">
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="30.0" width="30.0" x="0.0" y="15.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="human-step-1621434530432-170" id="BPMNShape_human-step-1621434530432-170">
+        <omgdc:Bounds height="60.0" width="100.0" x="80.0" y="0.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+        <omgdc:Bounds height="30.0" width="30.0" x="230.0" y="15.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sequenceFlow1" id="BPMNEdge_sequenceFlow1">
+        <omgdi:waypoint x="30.0" y="30.0"/>
+        <omgdi:waypoint x="80.0" y="30.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sequenceFlow2" id="BPMNEdge_sequenceFlow2">
+        <omgdi:waypoint x="180.0" y="30.0"/>
+        <omgdi:waypoint x="230.0" y="30.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
