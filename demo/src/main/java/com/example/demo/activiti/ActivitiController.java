@@ -28,16 +28,16 @@ public class ActivitiController {
 
     @Autowired
     private TaskService taskService;
-   private HistoryService historyService;
+    private HistoryService historyService;
 
     //ajouter un nouveau process et les variables
     @PostMapping("/start-process")
     public String startProcess(@RequestBody FormRepresentation formRepresentation) {
         Map<String, Object> variables = new HashMap<>();
         variables.put("task", formRepresentation.getTask());
-        variables.put("de", formRepresentation.getStart());
-        variables.put("description",formRepresentation.getDescription());
-        variables.put("ddl",formRepresentation.getDdl());
+        variables.put("de", formRepresentation.getDe());
+        variables.put("description", formRepresentation.getDescription());
+        variables.put("ddl", formRepresentation.getDdl());
         variables.put("employe", formRepresentation.getEmploye());
         runtimeService.startProcessInstanceByKey("gestiondestaches", variables);
 
@@ -81,7 +81,8 @@ public class ActivitiController {
         }
         return allTasks.toString();
     }
-//afficher les tasks d'un user
+
+    //afficher les tasks d'un user
     @GetMapping("/get-task/{id}")
     public List<TaskRepresentation> getTasksbyUser(@PathVariable long id) {
 
@@ -114,6 +115,7 @@ public class ActivitiController {
                 .map(task -> new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId(), task.getAssignee(), taskService.getVariables(task.getId())))
                 .collect(Collectors.toList());
     }
+
     //terminer le task
     @GetMapping("/complete-task/{processInstanceId}")
     public void completeTaskA(@PathVariable String processInstanceId) {
