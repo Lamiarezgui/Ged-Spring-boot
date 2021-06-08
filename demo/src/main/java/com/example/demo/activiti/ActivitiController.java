@@ -1,21 +1,16 @@
 package com.example.demo.activiti;
 
-import org.activiti.engine.FormService;
+
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.impl.util.json.JSONArray;
 import org.activiti.engine.impl.util.json.JSONObject;
-import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Task;
-import org.activiti.engine.form.AbstractFormType;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,7 +49,7 @@ public class ActivitiController {
 
     //afficher tous les tasks et leurs details
     @GetMapping("/getIds")
-    public String test() {
+    public JSONObject test() {
 
 
         JSONObject allTasks = new JSONObject();
@@ -68,18 +63,14 @@ public class ActivitiController {
             System.out.println("WF sizes = " + wft.size());
             for (Task temp : wft) {
                 JSONObject userWFDetails = new JSONObject();
-
-                userWFDetails.put("taskId ", temp.getId());
-                userWFDetails.put("task name ", temp.getName());
-                userWFDetails.put("InstanceId ", temp.getProcessInstanceId());
-                userWFDetails.put("variables ", taskService.getVariables(temp.getId()));
+                userWFDetails.put("variables",taskService.getVariables(temp.getId()));
                 ja.put(userWFDetails);
             }
             allTasks.put("userTasksDetails", ja);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return allTasks.toString();
+        return allTasks;
     }
 
     //afficher les tasks d'un user
