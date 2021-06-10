@@ -12,6 +12,7 @@ import com.nimbusds.oauth2.sdk.Response;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,6 +39,7 @@ public class LoginController {
     private UsersService userDetailsService;
 
     //ajouter un utilisateur
+    @PreAuthorize("hasRole('ROLE_INGENIEUR')")
     @PostMapping(path = "/ajoutUser")
     public String register(@RequestBody Users request) {
         return registrationService.register(request);

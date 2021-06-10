@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -59,6 +60,7 @@ public class VersionController {
         return fileResponse;
     }
 //exporter une version
+@PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getVersion(@PathVariable String id) {
         Optional<Versions> versionsOptional = versionsService.getVersions(id);
@@ -75,6 +77,7 @@ public class VersionController {
                 .body(versions.getData());
     }
     //visualiser une version
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("viewVersion/{id}")
     public ResponseEntity<byte[]> viewFile(@PathVariable String id) {
         Optional<Versions> versionsOptional = versionsService.getVersions(id);
@@ -93,6 +96,7 @@ public class VersionController {
     }
 
     //supprimer une version
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @DeleteMapping("/{id}")
     public String deleteVersion(@PathVariable(value = "id") String id)
             throws ResourceNotFoundException {

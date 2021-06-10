@@ -10,6 +10,7 @@ import org.activiti.engine.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ public class ActivitiController {
     private HistoryService historyService;
 
     //ajouter un nouveau process et les variables
+    @PreAuthorize("hasRole('ROLE_CONTROLEUR')")
     @PostMapping("/start-process")
     public String startProcess(@RequestBody FormRepresentation formRepresentation) {
         Map<String, Object> variables = new HashMap<>();
@@ -48,6 +50,7 @@ public class ActivitiController {
 
 
     //afficher tous les tasks et leurs details
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/getIds")
     public String test() {
 
@@ -63,6 +66,8 @@ public class ActivitiController {
             System.out.println("WF sizes = " + wft.size());
             for (Task temp : wft) {
                 JSONObject userWFDetails = new JSONObject();
+                userWFDetails.put("Task id: ",temp.getId());
+                userWFDetails.put("instance id: ",temp.getProcessInstanceId());
                 userWFDetails.put("variables",taskService.getVariables(temp.getId()));
                 ja.put(userWFDetails);
             }
@@ -74,6 +79,7 @@ public class ActivitiController {
     }
 
     //afficher les tasks d'un user
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/get-task/{id}")
     public List<TaskRepresentation> getTasksbyUser(@PathVariable long id) {
 
@@ -99,6 +105,7 @@ public class ActivitiController {
     }
 
     //get complete tasks for one user
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/completeTasks/{id}")
     public List<TaskRepresentation> getCompletedTaks(@PathVariable long id) {
         List<Task> usertasks = Collections.singletonList((Task) historyService.createHistoricTaskInstanceQuery().finished().taskAssignee(String.valueOf(id)).list());
@@ -108,6 +115,7 @@ public class ActivitiController {
     }
 
     //terminer le task
+    @PreAuthorize("hasRole(ROLE_ADMINISTRATEUR')")
     @GetMapping("/complete-task/{processInstanceId}")
     public void completeTaskA(@PathVariable String processInstanceId) {
         Task task = taskService.createTaskQuery()

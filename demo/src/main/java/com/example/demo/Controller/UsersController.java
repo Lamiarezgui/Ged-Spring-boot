@@ -12,6 +12,7 @@ import com.example.demo.mail.EmailSender;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +27,7 @@ public class UsersController {
     private final UsersService usersService;
 
     //modifier les donnees personnels du user
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @PutMapping("/user/{id}")
     public ResponseEntity<String> updateUsers(@PathVariable("id") long id, @RequestBody Users user) {
         try {
@@ -39,12 +41,14 @@ public class UsersController {
     }
 
     //modifier image
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @PutMapping("/userImage/{id}")
     public void updateImg(@RequestParam("image") MultipartFile file, @PathVariable("id") long id) {
         usersService.updateImg(file, id);
     }
 
     //modifier user de la part de l"ingenieur
+    @PreAuthorize("hasRole('ROLE_INGENIEUR')")
     @PutMapping("/IngUpdate/{id}")
     public ResponseEntity<String> ModifUserIng(@PathVariable("id") long id, @RequestBody Users user) {
         try {
@@ -58,6 +62,7 @@ public class UsersController {
     }
 
    //ajouter utilisateur dans le groupe
+   @PreAuthorize("hasRole('ROLE_CONTROLEUR')")
     @PostMapping("/groupe/user/{id_g}")
     public ResponseEntity<String> ajouterUser(@PathVariable("id_g") long id_g, @RequestBody Users user) {
         try {
@@ -71,24 +76,28 @@ public class UsersController {
     }
 
     //afficher la liste de tous les utilisateurs
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/users")
     public List<Users> getAllUsers() {
         return usersService.getAllUsers();
     }
 
     //afficher la liste des administrateurs
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/users/administrateurs")
     public Optional<Users> getAdmins() {
         return usersService.getAdmins();
     }
 
     //afficher la liste des superviseurs
+    @PreAuthorize("hasRole('ROLE_INGENIEUR')")
     @GetMapping("/users/superviseurs")
     public Optional<Users> getSuperviseurs() {
         return usersService.getSuperviseurs();
     }
 
     //afficher la liste des controleurs
+    @PreAuthorize("hasAnyRole('ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/users/controleurs")
     public Optional<Users> getControleurs() {
         return usersService.getControleurs();
@@ -96,6 +105,7 @@ public class UsersController {
 
 
     //afficher les donnees d'un utilisateur
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/user/{id}")
     public Optional<Users> getUsers(@PathVariable(value = "id") long id) {
         Optional<Users> u = usersService.getUsers(id);
@@ -108,6 +118,7 @@ public class UsersController {
     VersionRepository versionRepository;
 
     //supprimer un utilisateur
+    @PreAuthorize("hasRole('ROLE_INGENIEUR')")
     @DeleteMapping("/users/{id}")
     public String deleteUser(@PathVariable(value = "id") long id)
             throws ResourceNotFoundException {
@@ -122,6 +133,7 @@ public class UsersController {
     GroupeRepository groupeRepository;
 
     //afficher les users d'un groupe
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/groupeUsers/{id}")
     public List<Users> getGroupes(@PathVariable(value = "id") long id) {
         return usersService.getUsersg(id);

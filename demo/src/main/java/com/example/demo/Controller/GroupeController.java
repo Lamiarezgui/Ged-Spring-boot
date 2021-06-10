@@ -10,6 +10,7 @@ import com.example.demo.Services.UsersService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class GroupeController {
     private final GroupeService groupeService;
 
     //ajouter groupe
+    @PreAuthorize("hasRole('ROLE_CONTROLEUR')")
     @PostMapping("/groupe")
     public ResponseEntity<String> ajoutGroup(@RequestBody Groupe groupe) {
         groupeService.ajouterGroupe(groupe.getName());
@@ -30,6 +32,7 @@ public class GroupeController {
 
 
     //modifier nom du groupe
+    @PreAuthorize("hasRole('ROLE_CONTROLEUR')")
     @PutMapping("/groupe/{id}")
     public void updateNameGroupe(@PathVariable("id") long id, @RequestBody Groupe g) {
         groupeService.modifierName(g.getName(), id);
@@ -39,6 +42,7 @@ public class GroupeController {
     GroupeRepository groupeRepository;
 
    //supprimer un groupe
+   @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_INGENIEUR')")
     @DeleteMapping("/groupe/{id}")
     public String deleteGroupe(@PathVariable(value = "id") long id)
             throws ResourceNotFoundException {
@@ -51,6 +55,7 @@ public class GroupeController {
     }
 
     //afficher la liste des groupes
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/groupes")
     public List<Groupe> getAllGroupes() {
 
@@ -60,6 +65,7 @@ public class GroupeController {
     UsersRepository usersRepository;
 
     //afficher les groupes d'un user
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/userGroupes/{id}")
     public List<Object> getGroupes(@PathVariable(value = "id") long id) {
         return groupeService.getGroupes(id);

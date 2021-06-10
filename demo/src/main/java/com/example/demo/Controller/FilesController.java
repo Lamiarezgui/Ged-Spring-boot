@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -38,6 +39,7 @@ public class FilesController {
     UsersRepository usersRepository;
 
     //ajouter un fichier dans mes fichiers
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @PostMapping("/private")
     public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file, @RequestParam("user") Users user) {
         try {
@@ -52,6 +54,7 @@ public class FilesController {
     }
 
     //ajouter un fichier pour le public
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @PostMapping("/public")
     public ResponseEntity<String> uploadPublic(@RequestParam("file") MultipartFile file, @RequestParam("user") Users user) {
         try {
@@ -66,6 +69,7 @@ public class FilesController {
     }
 
     //ajouter un fichier dans un groupe
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @PostMapping("/groupe")
     public ResponseEntity<String> uploadGroupe(@RequestParam("file") MultipartFile file, @RequestParam("user") Users user, @RequestParam("groupe") Groupe groupe) {
         try {
@@ -82,36 +86,42 @@ public class FilesController {
     FichierRepository fichierRepository;
 
     // afficher la liste des fichiers pour un utilisateur
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/ListFiles/{id}")
     public List<Object> list(@PathVariable("id") long id) {
         return fileService.getAllFiles(id);
     }
 
     // afficher la liste des fichiers pour un groupe
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("ListFilesGroupe/{groupe_id}")
     public List<Object> FilesGroupe(@PathVariable("groupe_id") long id) {
         return fileService.getAllFilesGr(id);
     }
 
     // afficher la liste des fichiers public
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/public")
     public List<Object> listFilesPublic() {
         return fileService.getAllFilesPublic();
     }
 
     //afficher les versions de fichier
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/ListVersions/{id}")
     public List<Object> getVersionsFile(@PathVariable String id) {
         return fileService.getVersionsFile(id);
     }
 
     //afficher tous les fichiers avec les fichiers des utilisateurs supprimes
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping
     public List<Object> listFiles() {
         return fileService.getAllFiles();
     }
 
     //exporter le fichier
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable String id) {
         Optional<FileEntity> fileEntityOptional = fileService.getFile(id);
@@ -129,6 +139,7 @@ public class FilesController {
     }
 
     //visualiser un fichier
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("viewFile/{id}")
     public ResponseEntity<byte[]> viewFile(@PathVariable String id) {
         Optional<FileEntity> fileEntityOptional = fileService.getFile(id);
@@ -158,6 +169,7 @@ public class FilesController {
     }*/
 
     //ajouter une version au fichier privee
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @PostMapping("/{id}")
     public ResponseEntity<String> updateV(@RequestParam("file") MultipartFile file, @RequestParam("user") Users user, @PathVariable String id) {
         try {
@@ -172,6 +184,7 @@ public class FilesController {
     }
 
     //ajouter une version au fichier public
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @PostMapping("Public/{id}")
     public ResponseEntity<String> updateP(@RequestParam("file") MultipartFile file, @RequestParam("user") Users user, @PathVariable String id) {
         try {
@@ -185,6 +198,7 @@ public class FilesController {
         }
     }
     //ajouter version dans un groupe
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @PostMapping("AddVersGroup/{id}")
     public ResponseEntity<String> update(@RequestParam("file") MultipartFile file, @RequestParam("user") Users user,@RequestParam("groupe")Groupe groupe, @PathVariable String id) {
         try {
