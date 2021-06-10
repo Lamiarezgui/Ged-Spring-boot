@@ -49,7 +49,7 @@ public class ActivitiController {
 
     //afficher tous les tasks et leurs details
     @GetMapping("/getIds")
-    public JSONObject test() {
+    public String test() {
 
 
         JSONObject allTasks = new JSONObject();
@@ -70,7 +70,7 @@ public class ActivitiController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return allTasks;
+        return allTasks.toString();
     }
 
     //afficher les tasks d'un user

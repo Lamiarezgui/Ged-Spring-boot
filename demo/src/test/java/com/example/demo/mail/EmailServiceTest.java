@@ -34,7 +34,7 @@ public class EmailServiceTest {
         when(this.javaMailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
 
         // Act
-        this.emailService.send("alice.liddell@example.org", "jane.doe@example.org");
+        this.emailService.send("alice.liddell@example.org", "jane.doe@example.org","vos coordonnees");
 
         // Assert
         verify(this.javaMailSender).createMimeMessage();
@@ -48,7 +48,7 @@ public class EmailServiceTest {
         when(this.javaMailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
 
         // Act
-        this.emailService.send("utf-8", "jane.doe@example.org");
+        this.emailService.send("utf-8", "jane.doe@example.org","vos coordonnes");
 
         // Assert
         verify(this.javaMailSender).createMimeMessage();
@@ -62,7 +62,7 @@ public class EmailServiceTest {
         when(this.javaMailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
 
         // Act and Assert
-        assertThrows(IllegalStateException.class, () -> this.emailService.send("Vos Coordonees", "jane.doe@example.org"));
+        assertThrows(IllegalStateException.class, () -> this.emailService.send("Vos Coordonees", "jane.doe@example.org","vos coordonnees"));
         verify(this.javaMailSender).createMimeMessage();
     }
 }

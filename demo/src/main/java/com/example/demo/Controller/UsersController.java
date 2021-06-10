@@ -150,7 +150,7 @@ public class UsersController {
         String response = usersService.forgotPassword(user.getEmail());
 
         if (!response.startsWith("Invalid")) {
-            String link = "http://localhost:8080/reset-password?token=" + response;
+            String link = "http://localhost:3000/reset?token=" + response;
 
 
             emailSender.sendu(

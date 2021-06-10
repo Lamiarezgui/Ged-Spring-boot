@@ -38,11 +38,11 @@ public class RegisterUserService {
 
                 )
         );
-        String link = "http://localhost:8080/login";
+        String link = "http://localhost:3000/login";
 
         emailSender.send(
                 request.getEmail(),
-                buildEmail(request.getFirstName(), request.getPassword(), request.getEmail(), link));
+                buildEmail(request.getFirstName(), request.getPassword(), request.getEmail(), link),"vos coordonnees");
 
         return token;
     }
