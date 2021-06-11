@@ -17,9 +17,10 @@ import java.util.Set;
 public class GroupeService {
     private final GroupeRepository groupeRepository;
 
-    public void ajouterGroupe(String name) {
+    public void ajouterGroupe(String name,long control) {
         Groupe groupe = new Groupe();
         groupe.setName(name);
+        groupe.setControleur(control);
         groupeRepository.save(groupe);
     }
 
@@ -27,8 +28,8 @@ public class GroupeService {
         groupeRepository.modifiername(id, name);
     }
 
-    public List<Groupe> getAllGroupes() {
-        return groupeRepository.findAll();
+    public List<Object> getAllGroupes() {
+        return groupeRepository.findAllG();
     }
 
    public List<Object> getGroupes(long id) {
@@ -45,5 +46,9 @@ public class GroupeService {
     }
     public void delete(Groupe groupe) {
         groupeRepository.delete(groupe);
+    }
+
+    public List<Object> getAllGroupesControleur(long id) {
+      return groupeRepository.getGroupesControleur(id);
     }
 }

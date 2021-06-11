@@ -26,6 +26,7 @@ public class Groupe {
     )
     private Long id;
     private String name;
+    private Long controleur;
     @OneToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE

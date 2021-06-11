@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
 @AllArgsConstructor
 @RestController
 public class ActivitiController {
@@ -31,8 +32,9 @@ public class ActivitiController {
     private TaskService taskService;
     private HistoryService historyService;
     private final EmailSender emailSender;
+
     //ajouter un nouveau process et les variables
-    @PreAuthorize("hasRole('ROLE_CONTROLEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @PostMapping("/start-process")
     public String startProcess(@RequestBody FormRepresentation formRepresentation) {
         Map<String, Object> variables = new HashMap<>();
@@ -42,48 +44,47 @@ public class ActivitiController {
         variables.put("ddl", formRepresentation.getDdl());
         variables.put("employe", formRepresentation.getEmploye());
         runtimeService.startProcessInstanceByKey("gestiondestaches", variables);
-        Users user=usersRepository.getOne(formRepresentation.getEmploye());
-        Users email=usersRepository.findByEmail(user.getEmail());
+        Users user = usersRepository.getOne(formRepresentation.getEmploye());
+        Users email = usersRepository.findByEmail(user.getEmail());
         String link = "http://localhost:3000/ ";
         emailSender.send(
                 email.getEmail(),
-                buildEmail(email.getFirstName(),email.getLastName(), link),"vous avez une nouvelle tache");
-
+                buildEmail(email.getFirstName(), email.getLastName(), link), "vous avez une nouvelle tache");
 
 
         return "Process started. Number of currently running process instances = " + runtimeService.createProcessInstanceQuery()
                 .count();
     }
 
-        private String buildEmail(String firstName, String lastName, String link) {
-            return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
-                    "\n" +
-                    "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
-                    "\n" +
-                    "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;min-width:100%;width:100%!important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
-                    "    <tbody><tr>\n" +
-                    "        \n" +
-                    "        <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;max-width:580px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
-                    "          <tbody><tr>\n" +
-                    "                <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n" +
-                    "      <tbody><tr>\n" +
+    private String buildEmail(String firstName, String lastName, String link) {
+        return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
+                "\n" +
+                "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
+                "\n" +
+                "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;min-width:100%;width:100%!important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
+                "    <tbody><tr>\n" +
+                "        \n" +
+                "        <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;max-width:580px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
+                "          <tbody><tr>\n" +
+                "                <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n" +
+                "      <tbody><tr>\n" +
 
-                    "    <tr>\n" +
-                    "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
-                    "        \n" +
-                    "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + firstName +" "+ lastName + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> vous avez une nouvelle tache à faire </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\">" +
-                    "<p style=\\\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + " \">Voir vos taches </a> </p><p>Have a good Day</p>" +
-                    "        \n" +
-                    "      </td>\n" +
-                    "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
-                    "    </tr>\n" +
-                    "    <tr>\n" +
-                    "      <td height=\"30\"><br></td>\n" +
-                    "    </tr>\n" +
-                    "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
-                    "\n" +
-                    "</div></div>";
-        }
+                "    <tr>\n" +
+                "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
+                "        \n" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + firstName + " " + lastName + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> vous avez une nouvelle tache à faire </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\">" +
+                "<p style=\\\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + " \">Voir vos taches </a> </p><p>Have a good Day</p>" +
+                "        \n" +
+                "      </td>\n" +
+                "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "      <td height=\"30\"><br></td>\n" +
+                "    </tr>\n" +
+                "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
+                "\n" +
+                "</div></div>";
+    }
 
 
     //get les variables de chaque process
@@ -159,7 +160,7 @@ public class ActivitiController {
     }
 
     //terminer le task
-    @PreAuthorize("hasRole('ROLE_ADMINISTRATEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMINISTRATEUR')")
     @GetMapping("/complete-task/{processInstanceId}")
     public void completeTaskA(@PathVariable String processInstanceId) {
         Task task = taskService.createTaskQuery()

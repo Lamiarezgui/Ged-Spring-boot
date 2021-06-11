@@ -55,10 +55,11 @@ public class GroupeServiceTest {
         groupe.setVersions(new ArrayList<Versions>());
         groupe.setId(123L);
         groupe.setName("Name");
+        groupe.setControleur(Long.valueOf(1));
         when(this.groupeRepository.save((Groupe) any())).thenReturn(groupe);
 
         // Act
-        this.groupeService.ajouterGroupe("Name");
+        this.groupeService.ajouterGroupe("Name",1);
 
         // Assert
         verify(this.groupeRepository).save((Groupe) any());
@@ -83,7 +84,7 @@ public class GroupeServiceTest {
         when(this.groupeRepository.findAll()).thenReturn(groupeList);
 
         // Act
-        List<Groupe> actualAllGroupes = this.groupeService.getAllGroupes();
+        List<Object> actualAllGroupes = this.groupeService.getAllGroupes();
 
         // Assert
         assertSame(groupeList, actualAllGroupes);

@@ -26,13 +26,13 @@ public class GroupeController {
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR')")
     @PostMapping("/groupe")
     public ResponseEntity<String> ajoutGroup(@RequestBody Groupe groupe) {
-        groupeService.ajouterGroupe(groupe.getName());
+        groupeService.ajouterGroupe(groupe.getName(), groupe.getControleur());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
 
     //modifier nom du groupe
-    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @PutMapping("/groupe/{id}")
     public void updateNameGroupe(@PathVariable("id") long id, @RequestBody Groupe g) {
         groupeService.modifierName(g.getName(), id);
@@ -41,8 +41,8 @@ public class GroupeController {
     UsersService usersService;
     GroupeRepository groupeRepository;
 
-   //supprimer un groupe
-   @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_INGENIEUR')")
+    //supprimer un groupe
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @DeleteMapping("/groupe/{id}")
     public String deleteGroupe(@PathVariable(value = "id") long id)
             throws ResourceNotFoundException {
@@ -54,14 +54,24 @@ public class GroupeController {
         return "groupe supprime";
     }
 
-    //afficher la liste des groupes
+    //afficher la liste des groupes d'un controleur
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
+    @GetMapping("/groupes/{id}")
+    public List<Object> getAllGroupesControleur(@PathVariable(value = "id") long id) {
+
+        return groupeService.getAllGroupesControleur(id);
+
+    }
+
+    //afficher la liste des groupes
+    @PreAuthorize("hasAnyRole('ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/groupes")
-    public List<Groupe> getAllGroupes() {
+    public List<Object> getAllGroupes() {
 
         return groupeService.getAllGroupes();
 
     }
+
     UsersRepository usersRepository;
 
     //afficher les groupes d'un user

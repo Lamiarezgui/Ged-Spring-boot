@@ -55,7 +55,7 @@ public class GroupeControllerTest {
     @Test
     public void testAjoutGroup() throws Exception {
         // Arrange
-        doNothing().when(this.groupeService).ajouterGroupe(anyString());
+        doNothing().when(this.groupeService).ajouterGroupe(anyString(),anyLong());
 
         Groupe groupe = new Groupe();
         groupe.setUsers_groupes(new ArrayList<Users_groupes>());
@@ -63,6 +63,7 @@ public class GroupeControllerTest {
         groupe.setVersions(new ArrayList<Versions>());
         groupe.setId(123L);
         groupe.setName("Name");
+        groupe.setControleur(Long.valueOf(1));
         String content = (new ObjectMapper()).writeValueAsString(groupe);
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/groupe")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -80,7 +81,7 @@ public class GroupeControllerTest {
     @Test
     public void testGetAllGroupes() throws Exception {
         // Arrange
-        when(this.groupeService.getAllGroupes()).thenReturn(new ArrayList<Groupe>());
+        when(this.groupeService.getAllGroupes()).thenReturn(new ArrayList<Object>());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/groupes");
 
         // Act and Assert
@@ -95,7 +96,7 @@ public class GroupeControllerTest {
     @Test
     public void testGetAllGroupes2() throws Exception {
         // Arrange
-        when(this.groupeService.getAllGroupes()).thenReturn(new ArrayList<Groupe>());
+        when(this.groupeService.getAllGroupes()).thenReturn(new ArrayList<Object>());
         MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/groupes");
         getResult.contentType("Not all who wander are lost");
 
