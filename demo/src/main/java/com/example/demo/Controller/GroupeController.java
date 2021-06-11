@@ -23,7 +23,7 @@ public class GroupeController {
     private final GroupeService groupeService;
 
     //ajouter groupe
-    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @PostMapping("/groupe")
     public ResponseEntity<String> ajoutGroup(@RequestBody Groupe groupe) {
         groupeService.ajouterGroupe(groupe.getName(), groupe.getControleur());
