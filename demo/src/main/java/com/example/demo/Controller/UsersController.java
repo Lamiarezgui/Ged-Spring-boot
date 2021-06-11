@@ -119,21 +119,14 @@ public class UsersController {
 
     //afficher la liste des administrateurs
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
-    @GetMapping("/users/administrateurs")
+    @GetMapping("/users/all")
     public Optional<Users> getAdmins() {
         return usersService.getAdmins();
     }
 
-    //afficher la liste des superviseurs
-    @PreAuthorize("hasAnyRole('ROLE_INGENIEUR')")
-    @GetMapping("/users/superviseurs")
-    public Optional<Users> getSuperviseurs() {
-        return usersService.getSuperviseurs();
-    }
-
-    //afficher la liste des controleurs
+    //afficher la liste des controleurs et administrateurs
     @PreAuthorize("hasAnyRole('ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
-    @GetMapping("/users/controleurs")
+    @GetMapping("/users/controleursAdmin")
     public Optional<Users> getControleurs() {
         return usersService.getControleurs();
     }
