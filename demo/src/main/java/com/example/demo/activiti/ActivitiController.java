@@ -112,7 +112,8 @@ public class ActivitiController {
             for (Task temp : wft) {
                 JSONObject userWFDetails = new JSONObject();
                 userWFDetails.put("Task id: ", temp.getId());
-                userWFDetails.put("instance id: ", temp.getProcessInstanceId());
+                userWFDetails.put("Task name ", temp.getName());
+                userWFDetails.put("Instance id: ", temp.getProcessInstanceId());
                 userWFDetails.put("variables", taskService.getVariables(temp.getId()));
                 ja.put(userWFDetails);
             }
@@ -160,7 +161,7 @@ public class ActivitiController {
     }
 
     //terminer le task
-    @PreAuthorize("hasAnyRole('ROLE_ADMINISTRATEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/complete-task/{processInstanceId}")
     public void completeTaskA(@PathVariable String processInstanceId) {
         Task task = taskService.createTaskQuery()
