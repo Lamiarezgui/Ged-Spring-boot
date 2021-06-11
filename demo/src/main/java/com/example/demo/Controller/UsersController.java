@@ -61,24 +61,24 @@ public class UsersController {
         }
     }
 
-   //ajouter utilisateur dans le groupe
-   @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR')")
+    //ajouter utilisateur dans le groupe
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR')")
     @PostMapping("/groupe/user/{id_g}")
     public ResponseEntity<String> ajouterUser(@PathVariable("id_g") long id_g, @RequestBody Users user) {
 
         try {
-            usersService.ajoutuser(id_g,user);
+            usersService.ajoutuser(id_g, user);
 
 
             return ResponseEntity.status(HttpStatus.OK)
                     .body(String.format("utilisateur est ajouté au groupe"));
 
-            } catch (Exception e) {
+        } catch (Exception e) {
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(String.format("utilisateur n'est pas ajouté au groupe"));
         }
-   }
+    }
 
     private String buildEmail1(String firstName, String lastName, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
@@ -96,7 +96,7 @@ public class UsersController {
                 "    <tr>\n" +
                 "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
                 "        \n" +
-                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + firstName +" "+ lastName + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> vous avez été ajoutés à un nouveau groupe </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\">" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + firstName + " " + lastName + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> vous avez été ajoutés à un nouveau groupe </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\">" +
                 "<p style=\\\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + " \">Voir votre nouveau groupe </a> </p><p>Have a good Day</p>" +
                 "        \n" +
                 "      </td>\n" +

@@ -34,7 +34,7 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
     @Query("Select u from Users u where u.appUserRole='ADMINISTRATEUR'")
     Optional<Users> getAdmins();
 
-    @Query("Select u from Users u where u.appUserRole='CONTROLEUR'")
+    @Query("Select u from Users u where u.appUserRole='CONTROLEUR' and u.appUserRole='ADMINISTRATEUR' ")
     Optional<Users> getControleurs();
 
 
