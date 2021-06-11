@@ -112,7 +112,6 @@ public class ActivitiController {
             for (Task temp : wft) {
                 JSONObject userWFDetails = new JSONObject();
                 userWFDetails.put("Task id: ", temp.getId());
-                userWFDetails.put("Task name ", temp.getName());
                 userWFDetails.put("Instance id: ", temp.getProcessInstanceId());
                 userWFDetails.put("variables", taskService.getVariables(temp.getId()));
                 ja.put(userWFDetails);
