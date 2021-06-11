@@ -23,7 +23,7 @@ public class GroupeController {
     private final GroupeService groupeService;
 
     //ajouter groupe
-    @PreAuthorize("hasRole('ROLE_CONTROLEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR')")
     @PostMapping("/groupe")
     public ResponseEntity<String> ajoutGroup(@RequestBody Groupe groupe) {
         groupeService.ajouterGroupe(groupe.getName());
@@ -32,7 +32,7 @@ public class GroupeController {
 
 
     //modifier nom du groupe
-    @PreAuthorize("hasRole('ROLE_CONTROLEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR')")
     @PutMapping("/groupe/{id}")
     public void updateNameGroupe(@PathVariable("id") long id, @RequestBody Groupe g) {
         groupeService.modifierName(g.getName(), id);

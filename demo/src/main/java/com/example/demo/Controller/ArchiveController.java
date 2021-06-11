@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,12 +34,14 @@ public class ArchiveController {
     private final ArchiveService archiveService;
 
     //ajouter les details du dossier
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @PostMapping("archive")
     public void addDoss(@RequestBody Archive archive) {
         archiveService.save(archive);
     }
 
     // afficher la liste des dossiers
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("archive")
     public List<Object> list() {
         return archiveService.getAllDossiers();
@@ -46,6 +49,7 @@ public class ArchiveController {
     }
 
     //ajouter un fichier et ses versions existe deja dans l'app
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @PutMapping("archive/{archive_id}")
     public void addToArchive(@PathVariable("archive_id") String archive_id, @RequestBody FileEntity f) {
         archiveService.addToArchive(f.getId(), archive_id);
@@ -54,6 +58,7 @@ public class ArchiveController {
     private final FileService fileService;
 
     //ajouter un fichier au dossier
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @PostMapping("archive/files/{numDoss}")
     public ResponseEntity<String> addFiles(@RequestParam("file") MultipartFile file, @PathVariable("numDoss") String numDoss, @RequestParam("user") Users user) {
         String id = archiveRepository.findByNumDoss(numDoss);
@@ -71,6 +76,7 @@ public class ArchiveController {
 
 
     //afficher le contenu du dossier d'archive
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("archive/contenu/{numDoss}")
     public List<Object> getContenu(@PathVariable("numDoss") String numDoss) {
         return archiveService.getContenus(numDoss);
@@ -81,6 +87,7 @@ public class ArchiveController {
     FilesController filesController;
 
     //download files in archive
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("archive/{numDoss}")
     public ResponseEntity<byte[]> downLoad(@PathVariable("numDoss") String numDoss) {
 

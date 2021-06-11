@@ -1,6 +1,10 @@
 package com.example.demo.activiti;
 
 
+import com.example.demo.Model.Users;
+import com.example.demo.Repository.UsersRepository;
+import com.example.demo.mail.EmailSender;
+import lombok.AllArgsConstructor;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.impl.util.json.JSONArray;
 import org.activiti.engine.impl.util.json.JSONObject;
@@ -12,20 +16,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.*;
 import java.util.stream.Collectors;
-
+@AllArgsConstructor
 @RestController
 public class ActivitiController {
     private static final Logger logger = LoggerFactory.getLogger(ActivitiController.class);
 
     @Autowired
     private RuntimeService runtimeService;
-
+    UsersRepository usersRepository;
     @Autowired
     private TaskService taskService;
     private HistoryService historyService;
-
+    private final EmailSender emailSender;
     //ajouter un nouveau process et les variables
     @PreAuthorize("hasRole('ROLE_CONTROLEUR')")
     @PostMapping("/start-process")
@@ -37,10 +42,49 @@ public class ActivitiController {
         variables.put("ddl", formRepresentation.getDdl());
         variables.put("employe", formRepresentation.getEmploye());
         runtimeService.startProcessInstanceByKey("gestiondestaches", variables);
+        Users user=usersRepository.getOne(formRepresentation.getEmploye());
+        Users email=usersRepository.findByEmail(user.getEmail());
+        String link = "http://localhost:3000/ ";
+        emailSender.send(
+                email.getEmail(),
+                buildEmail(email.getFirstName(),email.getLastName(), link),"vous avez une nouvelle tache");
+
+
 
         return "Process started. Number of currently running process instances = " + runtimeService.createProcessInstanceQuery()
                 .count();
     }
+
+        private String buildEmail(String firstName, String lastName, String link) {
+            return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
+                    "\n" +
+                    "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
+                    "\n" +
+                    "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;min-width:100%;width:100%!important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
+                    "    <tbody><tr>\n" +
+                    "        \n" +
+                    "        <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;max-width:580px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
+                    "          <tbody><tr>\n" +
+                    "                <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n" +
+                    "      <tbody><tr>\n" +
+
+                    "    <tr>\n" +
+                    "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
+                    "        \n" +
+                    "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + firstName +" "+ lastName + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> vous avez une nouvelle tache à faire </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\">" +
+                    "<p style=\\\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + " \">Voir vos taches </a> </p><p>Have a good Day</p>" +
+                    "        \n" +
+                    "      </td>\n" +
+                    "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
+                    "    </tr>\n" +
+                    "    <tr>\n" +
+                    "      <td height=\"30\"><br></td>\n" +
+                    "    </tr>\n" +
+                    "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
+                    "\n" +
+                    "</div></div>";
+        }
+
 
     //get les variables de chaque process
     @GetMapping("/var/{processInstanceId}")
@@ -66,9 +110,9 @@ public class ActivitiController {
             System.out.println("WF sizes = " + wft.size());
             for (Task temp : wft) {
                 JSONObject userWFDetails = new JSONObject();
-                userWFDetails.put("Task id: ",temp.getId());
-                userWFDetails.put("instance id: ",temp.getProcessInstanceId());
-                userWFDetails.put("variables",taskService.getVariables(temp.getId()));
+                userWFDetails.put("Task id: ", temp.getId());
+                userWFDetails.put("instance id: ", temp.getProcessInstanceId());
+                userWFDetails.put("variables", taskService.getVariables(temp.getId()));
                 ja.put(userWFDetails);
             }
             allTasks.put("userTasksDetails", ja);
@@ -115,7 +159,7 @@ public class ActivitiController {
     }
 
     //terminer le task
-    @PreAuthorize("hasRole(ROLE_ADMINISTRATEUR')")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATEUR')")
     @GetMapping("/complete-task/{processInstanceId}")
     public void completeTaskA(@PathVariable String processInstanceId) {
         Task task = taskService.createTaskQuery()

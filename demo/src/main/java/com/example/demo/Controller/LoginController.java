@@ -39,7 +39,7 @@ public class LoginController {
     private UsersService userDetailsService;
 
     //ajouter un utilisateur
-    @PreAuthorize("hasRole('ROLE_INGENIEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_INGENIEUR')")
     @PostMapping(path = "/ajoutUser")
     public String register(@RequestBody Users request) {
         return registrationService.register(request);

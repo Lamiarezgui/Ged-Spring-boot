@@ -48,7 +48,7 @@ public class UsersController {
     }
 
     //modifier user de la part de l"ingenieur
-    @PreAuthorize("hasRole('ROLE_INGENIEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_INGENIEUR')")
     @PutMapping("/IngUpdate/{id}")
     public ResponseEntity<String> ModifUserIng(@PathVariable("id") long id, @RequestBody Users user) {
         try {
@@ -62,21 +62,56 @@ public class UsersController {
     }
 
    //ajouter utilisateur dans le groupe
-   @PreAuthorize("hasRole('ROLE_CONTROLEUR')")
+   @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR')")
     @PostMapping("/groupe/user/{id_g}")
     public ResponseEntity<String> ajouterUser(@PathVariable("id_g") long id_g, @RequestBody Users user) {
+
         try {
             usersService.ajoutuser(id_g,user);
+
+
             return ResponseEntity.status(HttpStatus.OK)
                     .body(String.format("utilisateur est ajouté au groupe"));
-        } catch (Exception e) {
+
+            } catch (Exception e) {
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(String.format("utilisateur n'est pas ajouté au groupe"));
         }
+   }
+
+    private String buildEmail1(String firstName, String lastName, String link) {
+        return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
+                "\n" +
+                "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
+                "\n" +
+                "  <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;min-width:100%;width:100%!important\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n" +
+                "    <tbody><tr>\n" +
+                "        \n" +
+                "        <table role=\"presentation\" width=\"100%\" style=\"border-collapse:collapse;max-width:580px\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\n" +
+                "          <tbody><tr>\n" +
+                "                <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse:collapse\">\n" +
+                "      <tbody><tr>\n" +
+
+                "    <tr>\n" +
+                "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
+                "        \n" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + firstName +" "+ lastName + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> vous avez été ajoutés à un nouveau groupe </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\">" +
+                "<p style=\\\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + " \">Voir votre nouveau groupe </a> </p><p>Have a good Day</p>" +
+                "        \n" +
+                "      </td>\n" +
+                "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
+                "    </tr>\n" +
+                "    <tr>\n" +
+                "      <td height=\"30\"><br></td>\n" +
+                "    </tr>\n" +
+                "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
+                "\n" +
+                "</div></div>";
     }
 
     //afficher la liste de tous les utilisateurs
-    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_INGENIEUR')")
     @GetMapping("/users")
     public List<Users> getAllUsers() {
         return usersService.getAllUsers();
@@ -90,7 +125,7 @@ public class UsersController {
     }
 
     //afficher la liste des superviseurs
-    @PreAuthorize("hasRole('ROLE_INGENIEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_INGENIEUR')")
     @GetMapping("/users/superviseurs")
     public Optional<Users> getSuperviseurs() {
         return usersService.getSuperviseurs();
@@ -118,7 +153,7 @@ public class UsersController {
     VersionRepository versionRepository;
 
     //supprimer un utilisateur
-    @PreAuthorize("hasRole('ROLE_INGENIEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_INGENIEUR')")
     @DeleteMapping("/users/{id}")
     public String deleteUser(@PathVariable(value = "id") long id)
             throws ResourceNotFoundException {
