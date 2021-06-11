@@ -135,7 +135,7 @@ public class UsersController {
 
 
     //afficher les donnees d'un utilisateur
-    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/user/{id}")
     public Optional<Users> getUsers(@PathVariable(value = "id") long id) {
         Optional<Users> u = usersService.getUsers(id);
