@@ -15,7 +15,7 @@ public interface ArchiveRepository extends JpaRepository<Archive, String> {
     @Query("SELECT a.numDoss,a.theme_titre,a.date,a.cin,a.matricule,a.motdeCle,a.nbrePieces,a.nomPersonnel,a.serie from Archive a")
     List<Object> getAll();
 
-    @Query("select f.id,f.name,f.date,f.size from Archive a inner join FileEntity f on f.archive.id=a.id where a.numDoss=:numDoss")
+    @Query("select f.id,f.name,f.date,f.size,f.user.lastName,f.user.firstName from Archive a inner join FileEntity f on f.archive.id=a.id where a.numDoss=:numDoss")
     List<Object> getContenu(String numDoss);
 
     @Query("select f.id from Archive a inner join FileEntity f on f.archive.id=a.id where a.numDoss=:numDoss")
