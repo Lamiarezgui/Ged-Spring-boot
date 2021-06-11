@@ -130,7 +130,7 @@ public class UsersService implements UserDetailsService {
         return usersRepository.getAdmins();
     }
 
-    public Optional<Users> getControleurs() {
+    public List<Users> getControleurs() {
         return usersRepository.getControleurs();
     }
 
