@@ -120,7 +120,7 @@ public class UsersController {
     //afficher la liste des administrateurs
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/users/administrateurs")
-    public Optional<Users> getAdmins() {
+    public List<Users> getAdmins() {
         return usersService.getAdmins();
     }
 

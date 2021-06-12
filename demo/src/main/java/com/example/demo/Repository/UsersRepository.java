@@ -30,7 +30,7 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
     Optional<Users> getSuperviseurs();
 
     @Query("Select u from Users u where u.appUserRole='ADMINISTRATEUR'")
-    Optional<Users> getAdmins();
+    List<Users> getAdmins();
 
     @Query("Select u from Users u where u.appUserRole='CONTROLEUR' or u.appUserRole='ADMINISTRATEUR'")
     List<Users> getControleurs();

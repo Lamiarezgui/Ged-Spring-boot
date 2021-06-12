@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -126,7 +125,7 @@ public class UsersService implements UserDetailsService {
         return usersRepository.getSuperviseurs();
     }
 
-    public Optional<Users> getAdmins() {
+    public List<Users> getAdmins() {
         return usersRepository.getAdmins();
     }
 
