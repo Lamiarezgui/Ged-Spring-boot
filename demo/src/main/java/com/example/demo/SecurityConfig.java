@@ -89,7 +89,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 antMatchers("/authenticate").permitAll()
                 .antMatchers("/username").authenticated()
                 .antMatchers("/files").authenticated()
-                .antMatchers("/files/*").permitAll()
+                .antMatchers("/files/*").authenticated()
                 .antMatchers("/files/viewFile/*").permitAll()
                 .antMatchers("/ajoutUser").authenticated()
                 .antMatchers("/user/*").authenticated()

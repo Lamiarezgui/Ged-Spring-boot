@@ -128,12 +128,14 @@ public class FilesController {
 
     }
     // countFiles
+
     @GetMapping("/countfilesPerYear")
     public List<Object> countFilesperYear() {
         System.out.println(fichierRepository.countFilesYear());
         return fichierRepository.countFilesYear();
 
     }
+
     @GetMapping("/countfilesPerDay")
     public List<Object> countFilesperDay() {
         System.out.println(fichierRepository.countFilesDay());
@@ -143,6 +145,7 @@ public class FilesController {
 
 
     //exporter le fichier
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable String id) {
         Optional<FileEntity> fileEntityOptional = fileService.getFile(id);
@@ -161,6 +164,7 @@ public class FilesController {
     }
 
     //visualiser un fichier
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("viewFile/{id}")
     public ResponseEntity<byte[]> viewFile(@PathVariable String id) {
         Optional<FileEntity> fileEntityOptional = fileService.getFile(id);
