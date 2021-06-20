@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +38,7 @@ public class VersionsService {
         version.setContentType(file.getContentType());
         version.setData(file.getBytes());
         version.setSize(file.getSize());
-        version.setDate(LocalDateTime.now());
+        version.setDate(LocalDate.now());
         version.setPrivilege("GROUPE");
         version.setFileEntity(f);
         version.setUser(user);
@@ -52,7 +53,7 @@ public class VersionsService {
         version.setContentType(file.getContentType());
         version.setData(file.getBytes());
         version.setSize(file.getSize());
-        version.setDate(LocalDateTime.now());
+        version.setDate(LocalDate.now());
         version.setFileEntity(f);
         version.setPrivilege(priv);
         version.setUser(user);

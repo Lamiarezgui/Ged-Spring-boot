@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,7 +26,7 @@ public class Versions {
     private Long size;
     @Lob
     private byte[] data;
-    private LocalDateTime date;
+    private LocalDate date;
     private String privilege;
 
     @ManyToOne

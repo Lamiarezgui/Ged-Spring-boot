@@ -62,7 +62,7 @@ public class UsersController {
     }
 
     //ajouter utilisateur dans le groupe
-    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @PostMapping("/groupe/user/{id_g}")
     public ResponseEntity<String> ajouterUser(@PathVariable("id_g") long id_g, @RequestBody Users user) {
 

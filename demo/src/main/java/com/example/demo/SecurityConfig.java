@@ -89,7 +89,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 antMatchers("/authenticate").permitAll()
                 .antMatchers("/username").authenticated()
                 .antMatchers("/files").authenticated()
-                .antMatchers("/files/*").authenticated()
+                .antMatchers("/files/*").permitAll()
+                .antMatchers("/files/viewFile/*").permitAll()
                 .antMatchers("/ajoutUser").authenticated()
                 .antMatchers("/user/*").authenticated()
                 .antMatchers("/users").authenticated()
@@ -103,7 +104,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/modifpass/*").authenticated()
                 .antMatchers("/forgot-password/*").permitAll()
                 .antMatchers("/reset-password/*").permitAll()
-                .antMatchers("/ws/info/*", "/ws/*", "/chat/*", "/messages/*").authenticated()
                 .and()
                 .rememberMe();
 

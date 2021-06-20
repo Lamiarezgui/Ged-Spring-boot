@@ -18,14 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.xml.ws.Response;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @RestController
 @AllArgsConstructor
@@ -120,8 +120,29 @@ public class FilesController {
         return fileService.getAllFiles();
     }
 
+    // countFiles
+    @GetMapping("/countfilesPerMonth")
+    public List<Object> countFiles() {
+        System.out.println(fichierRepository.countFilesMonth());
+        return fichierRepository.countFilesMonth();
+
+    }
+    // countFiles
+    @GetMapping("/countfilesPerYear")
+    public List<Object> countFilesperYear() {
+        System.out.println(fichierRepository.countFilesYear());
+        return fichierRepository.countFilesYear();
+
+    }
+    @GetMapping("/countfilesPerDay")
+    public List<Object> countFilesperDay() {
+        System.out.println(fichierRepository.countFilesDay());
+        return fichierRepository.countFilesDay();
+
+    }
+
+
     //exporter le fichier
-    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable String id) {
         Optional<FileEntity> fileEntityOptional = fileService.getFile(id);
@@ -132,6 +153,7 @@ public class FilesController {
         }
 
         FileEntity fileEntity = fileEntityOptional.get();
+
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileEntity.getName() + "\"")
                 .contentType(MediaType.valueOf(fileEntity.getContentType()))
@@ -139,7 +161,6 @@ public class FilesController {
     }
 
     //visualiser un fichier
-    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("viewFile/{id}")
     public ResponseEntity<byte[]> viewFile(@PathVariable String id) {
         Optional<FileEntity> fileEntityOptional = fileService.getFile(id);
@@ -173,7 +194,7 @@ public class FilesController {
     @PostMapping("/{id}")
     public ResponseEntity<String> updateV(@RequestParam("file") MultipartFile file, @RequestParam("user") Users user, @PathVariable String id) {
         try {
-            versionsService.saved(file,user,id,"PRIVEE");
+            versionsService.saved(file, user, id, "PRIVEE");
 
             return ResponseEntity.status(HttpStatus.OK)
                     .body(String.format("File uploaded successfully: %s", file.getOriginalFilename()));
@@ -188,7 +209,7 @@ public class FilesController {
     @PostMapping("Public/{id}")
     public ResponseEntity<String> updateP(@RequestParam("file") MultipartFile file, @RequestParam("user") Users user, @PathVariable String id) {
         try {
-            versionsService.saved(file,user,id,"PUBLIC");
+            versionsService.saved(file, user, id, "PUBLIC");
 
             return ResponseEntity.status(HttpStatus.OK)
                     .body(String.format("File uploaded successfully: %s", file.getOriginalFilename()));
@@ -197,12 +218,13 @@ public class FilesController {
                     .body(String.format("Could not upload the file: %s!", file.getOriginalFilename()));
         }
     }
+
     //ajouter version dans un groupe
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @PostMapping("AddVersGroup/{id}")
-    public ResponseEntity<String> update(@RequestParam("file") MultipartFile file, @RequestParam("user") Users user,@RequestParam("groupe")Groupe groupe, @PathVariable String id) {
+    public ResponseEntity<String> update(@RequestParam("file") MultipartFile file, @RequestParam("user") Users user, @RequestParam("groupe") Groupe groupe, @PathVariable String id) {
         try {
-            versionsService.save(file, user,groupe,id);
+            versionsService.save(file, user, groupe, id);
 
             return ResponseEntity.status(HttpStatus.OK)
                     .body(String.format("File uploaded successfully: %s", file.getOriginalFilename()));

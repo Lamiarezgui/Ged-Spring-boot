@@ -11,6 +11,12 @@ import java.util.Optional;
 
 @Repository
 public interface ArchiveRepository extends JpaRepository<Archive, String> {
+    @Query(value="select count(f) as count,EXTRACT(MONTH from f.date) AS MONTH from archive f group by MONTH order by MONTH",nativeQuery = true)
+    List<Object> countDossMonth();
+    @Query(value="select count(f)as count,EXTRACT(YEAR from f.date) AS year from archive f  group by year order by year",nativeQuery = true)
+    List<Object> countDossYear();
+    @Query(value="select count(f)as count,EXTRACT(DAY from f.date) AS day from archive f  group by day order by day",nativeQuery = true)
+    List<Object> countDossDay();
 
     @Query("SELECT a.numDoss,a.theme_titre,a.date,a.cin,a.matricule,a.motdeCle,a.nbrePieces,a.nomPersonnel,a.serie from Archive a")
     List<Object> getAll();

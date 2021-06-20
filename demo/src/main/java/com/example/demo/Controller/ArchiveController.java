@@ -9,6 +9,7 @@ import com.example.demo.Services.ArchiveService;
 import com.example.demo.Services.FileService;
 import lombok.AllArgsConstructor;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
@@ -20,7 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
@@ -48,6 +52,88 @@ public class ArchiveController {
 
     }
 
+    // countDoss per month
+    @GetMapping("/countDossPerMonth")
+    public List<Object> countFiles() {
+        return archiveRepository.countDossMonth();
+
+    }
+
+    // countDoss per year
+    @GetMapping("/countDossPerYear")
+    public List<Object> countFilesperYear() {
+        return archiveRepository.countDossYear();
+
+    }
+
+    //count Doss per day
+    @GetMapping("/countDossPerDay")
+    public List<Object> countFilesperDay() {
+        return archiveRepository.countDossDay();
+
+    }
+
+    private static final int BUFFER_SIZE = 2 * 1024;
+
+    @GetMapping("/zip/{numDoss}")
+    public void toZip(@PathVariable String numDoss, OutputStream out, HttpServletResponse response) throws RuntimeException {
+        long start = System.currentTimeMillis();
+        ZipOutputStream zos = null;
+
+        try {
+            zos = new ZipOutputStream(out);
+            List<String> list = archiveRepository.getIdfiles(numDoss);
+            for (Object l : list) {
+                List<File> srcFiles = (List<File>) filesController.getFile(l.toString());
+
+                for (File srcFile : srcFiles) {
+                    byte[] buf = new byte[BUFFER_SIZE];
+                    zos.putNextEntry(new ZipEntry(srcFile.getName()));
+                    int len;
+                    FileInputStream in = new FileInputStream(srcFile);
+                    while ((len = in.read(buf)) != -1) {
+                        zos.write(buf, 0, len);
+                    }
+                    zos.closeEntry();
+                    in.close();
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    response.setContentType("application/x-msdownload");
+                    response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + srcFile.getName());
+                }
+            }
+            long end = System.currentTimeMillis();
+            System.out.println("Compression completed, time consuming:" + (end - start) + " ms");
+        } catch (Exception e) {
+            throw new RuntimeException("zip error from ZipUtils", e);
+        } finally {
+            if (zos != null) {
+                try {
+                    zos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @GetMapping(value = "/zip-download/{id}")
+    public void zipDownload(@PathVariable String id, HttpServletResponse response) throws IOException {
+        List<String> liste = archiveService.getFiles(id);
+        ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream());
+        for (String ids : liste) {
+            Optional<FileEntity> fileEntityOptional = fileService.getFile(ids);
+            ZipEntry zipEntry = new ZipEntry(fileEntityOptional.get().getName());
+            zipOut.putNextEntry(zipEntry);
+            zipOut.closeEntry();
+
+        }
+        zipOut.finish();
+        zipOut.close();
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/x-msdownload");
+        response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=111");
+    }
+
     //ajouter un fichier et ses versions existe deja dans l'app
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @PutMapping("archive/{archive_id}")
@@ -64,7 +150,7 @@ public class ArchiveController {
         String id = archiveRepository.findByNumDoss(numDoss);
         Archive archive = archiveRepository.getOne(id);
         try {
-            fileService.saveArchive(file,user,archive,"PUBLIC");
+            fileService.saveArchive(file, user, archive, "PUBLIC");
 
             return ResponseEntity.status(HttpStatus.OK)
                     .body(String.format("File uploaded successfully: %s", file.getOriginalFilename()));
@@ -96,25 +182,6 @@ public class ArchiveController {
             return filesController.getFile(l.toString());
         }
         return downLoad(numDoss);
-    }
-
-
-    @GetMapping(value = "/zip-download/{id}")
-    public void zipDownload(@PathVariable String id, HttpServletResponse response) throws IOException {
-        List<String> liste = archiveService.getFiles(id);
-        ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream());
-        for (String ids : liste) {
-            Optional<FileEntity> fileEntityOptional = fileService.getFile(ids);
-            ZipEntry zipEntry = new ZipEntry(fileEntityOptional.get().getName());
-            zipOut.putNextEntry(zipEntry);
-            zipOut.closeEntry();
-
-        }
-        zipOut.finish();
-        zipOut.close();
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/x-msdownload");
-        response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=111");
     }
 
 

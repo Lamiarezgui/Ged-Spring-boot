@@ -61,7 +61,7 @@ public class ArchiveService {
         return archiveRepository.getIdfiles(numDoss);
     }
 
- public void download(HttpServletResponse response,
+/* public void download(HttpServletResponse response,
                       String numDoss) throws IOException {
 
         ZipEntry zipEntry = null;
@@ -167,6 +167,6 @@ public class ArchiveService {
         return path;
     }
 
-
+*/
 
 }

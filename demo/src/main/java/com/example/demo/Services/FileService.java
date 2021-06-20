@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +33,7 @@ public class FileService {
         fileEntity.setContentType(file.getContentType());
         fileEntity.setData(file.getBytes());
         fileEntity.setSize(file.getSize());
-        fileEntity.setDate(LocalDateTime.now());
+        fileEntity.setDate(LocalDate.now());
         fileEntity.setPrivilege(priv);
         fileEntity.setUser(user);
         fileRepository.save(fileEntity);
@@ -43,7 +44,7 @@ public class FileService {
         fileEntity.setContentType(file.getContentType());
         fileEntity.setData(file.getBytes());
         fileEntity.setSize(file.getSize());
-        fileEntity.setDate(LocalDateTime.now());
+        fileEntity.setDate(LocalDate.now());
         fileEntity.setPrivilege(priv);
         fileEntity.setUser(user);
         fileEntity.setGroupe(groupe);
@@ -78,7 +79,7 @@ ArchiveRepository archiveRepository;
         fileEntity.setContentType(file.getContentType());
         fileEntity.setData(file.getBytes());
         fileEntity.setSize(file.getSize());
-        fileEntity.setDate(LocalDateTime.now());
+        fileEntity.setDate(LocalDate.now());
         fileEntity.setPrivilege(privilege);
         fileEntity.setUser(user);
 
