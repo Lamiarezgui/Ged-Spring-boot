@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 @Transactional
 public interface FichierRepository extends JpaRepository<FileEntity, String> {
-   @Query(value="select count(f) as count,EXTRACT(MONTH from f.date) AS MONTH from files f group by MONTH order by MONTH",nativeQuery = true)
+   @Query(value="select count(f) as count,to_char(f.date,'MONTH') AS MONTH from files f group by MONTH order by MONTH",nativeQuery = true)
    List<Object> countFilesMonth();
     @Query(value="select count(f)as count,EXTRACT(YEAR from f.date) AS year from files f  group by year order by year",nativeQuery = true)
     List<Object> countFilesYear();
