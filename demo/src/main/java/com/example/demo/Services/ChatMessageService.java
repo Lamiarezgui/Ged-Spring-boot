@@ -7,6 +7,8 @@ import com.example.demo.Repository.ChatRoomRepository;
 import com.example.demo.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +22,7 @@ public class ChatMessageService {
 
     public ChatMessage save(ChatMessage chatMessage) {
         chatMessage.setStatus(MessageStatus.RECEIVED);
+        chatMessage.setTimestamp(LocalDateTime.now());
         repository.save(chatMessage);
         return chatMessage;
     }

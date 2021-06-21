@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class ChatMessage {
     private String content;
     @OneToMany
     private List<FileEntity> files;
-    private Date timestamp;
+    private LocalDateTime timestamp;
     private MessageStatus status;
 }
 
