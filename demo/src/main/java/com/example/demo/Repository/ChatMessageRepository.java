@@ -8,12 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 @Transactional
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
 
     long countBySenderIdAndRecipientIdAndStatus(
             long senderId, long recipientId, MessageStatus status);
 
+    @Query("select c from ChatMessage c where c.chatId=:chatId order by c.timestamp")
     List<ChatMessage> findByChatId(String chatId);
 
     @Modifying

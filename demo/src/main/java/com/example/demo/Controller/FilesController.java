@@ -7,6 +7,7 @@ import com.example.demo.ResourceNotFoundException;
 import com.example.demo.Services.FileService;
 import com.example.demo.Services.VersionsService;
 import lombok.AllArgsConstructor;
+import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -249,11 +250,11 @@ public class FilesController {
             ProcessBuilder ps = new ProcessBuilder("py", "C:/Users/rezgu/PycharmProjects/pythonProject/main.py");
             ps.redirectErrorStream(true);
             Process pr = ps.start();
-  //          PythonInterpreter pythonInterpreter = new PythonInterpreter();
-   //         pythonInterpreter.execfile("C:/Users/rezgu/PycharmProjects/pythonProject/main.py",file);
-           Process p=Runtime.getRuntime().exec("C:/Users/rezgu/PycharmProjects/pythonProject/main.py");
-            BufferedReader stdInput = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-            BufferedReader stdError = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
+            PythonInterpreter pythonInterpreter = new PythonInterpreter();
+            pythonInterpreter.execfile("C:/Users/rezgu/PycharmProjects/pythonProject/main.py");
+            Process p=Runtime.getRuntime().exec("C:/Users/rezgu/PycharmProjects/pythonProject/dist/main.exe");
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
             String s = null;
             // read the output
             while ((s = stdInput.readLine()) != null) {
