@@ -2,8 +2,7 @@ package com.example.demo.Model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Setter
 @AllArgsConstructor
@@ -13,9 +12,17 @@ import javax.persistence.Id;
 @Entity
 public class ChatRoom {
 @Id
-        private String id;
+@SequenceGenerator(
+        name = "chat_sequence",
+        sequenceName = "chat_sequence",
+        allocationSize = 1
+)
+@GeneratedValue(strategy = GenerationType.SEQUENCE,
+        generator = "chat_sequence"
+)
+        private long id;
         private String chatId;
-        private String senderId;
-        private String recipientId;
+        private long senderId;
+        private long recipientId;
 
 }

@@ -6,13 +6,10 @@ import com.example.demo.Repository.ChatMessageRepository;
 import com.example.demo.Repository.ChatRoomRepository;
 import com.example.demo.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.relational.core.query.Criteria;
-import org.springframework.data.relational.core.query.Update;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ChatMessageService {
@@ -27,15 +24,15 @@ public class ChatMessageService {
         return chatMessage;
     }
 
-    public long countNewMessages(String senderId, String recipientId) {
+    public long countNewMessages(long senderId, long recipientId) {
         return repository.countBySenderIdAndRecipientIdAndStatus(
                 senderId, recipientId, MessageStatus.RECEIVED);
     }
 
-    public List<ChatMessage> findChatMessages(String senderId, String recipientId) {
-        var chatId = chatRoomService.getChatId(senderId, recipientId, false);
+    public List<ChatMessage> findChatMessages(long senderId, long recipientId) {
+        Optional<String> chatId = chatRoomService.getChatId(senderId, recipientId, false);
 
-        var messages =
+        List<ChatMessage> messages =
                 chatId.map(cId -> repository.findByChatId(cId)).orElse(new ArrayList<>());
 
         if(messages.size() > 0) {
@@ -45,7 +42,7 @@ public class ChatMessageService {
         return messages;
     }
 
-    public ChatMessage findById(String id) throws ResourceNotFoundException {
+    public ChatMessage findById(long id) throws ResourceNotFoundException {
         return repository
                 .findById(id)
                 .map(chatMessage -> {
@@ -56,7 +53,7 @@ public class ChatMessageService {
                         new ResourceNotFoundException("can't find message (" + id + ")"));
     }
 
-    public void updateStatuses(String senderId, String recipientId, MessageStatus status) {
+    public void updateStatuses(long senderId, long recipientId, MessageStatus status) {
         repository.update(senderId,recipientId,status);
 
     }

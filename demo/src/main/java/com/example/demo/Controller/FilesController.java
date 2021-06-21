@@ -86,7 +86,7 @@ public class FilesController {
     FichierRepository fichierRepository;
 
     // afficher la liste des fichiers pour un utilisateur
-    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
+    //@PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/ListFiles/{id}")
     public List<Object> list(@PathVariable("id") long id) {
         return fileService.getAllFiles(id);
@@ -94,27 +94,27 @@ public class FilesController {
 
     // afficher la liste des fichiers pour un groupe
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
-    @GetMapping("ListFilesGroupe/{groupe_id}")
+   // @GetMapping("ListFilesGroupe/{groupe_id}")
     public List<Object> FilesGroupe(@PathVariable("groupe_id") long id) {
         return fileService.getAllFilesGr(id);
     }
 
     // afficher la liste des fichiers public
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
-    @GetMapping("/public")
+   // @GetMapping("/public")
     public List<Object> listFilesPublic() {
         return fileService.getAllFilesPublic();
     }
 
     //afficher les versions de fichier
-    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
+    //@PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/ListVersions/{id}")
     public List<Object> getVersionsFile(@PathVariable String id) {
         return fileService.getVersionsFile(id);
     }
 
     //afficher tous les fichiers avec les fichiers des utilisateurs supprimes
-    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
+    //@PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping
     public List<Object> listFiles() {
         return fileService.getAllFiles();
@@ -145,7 +145,7 @@ public class FilesController {
 
 
     //exporter le fichier
-    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
+   // @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable String id) {
         Optional<FileEntity> fileEntityOptional = fileService.getFile(id);
@@ -238,19 +238,22 @@ public class FilesController {
         }
     }
 
-/*
+
 
     @PostMapping("ocr")
-    public void try(@RequestParam("file") MultipartFile file){
+   public void Ocr(@RequestParam("file") MultipartFile file){
 
-    }
-    public ResponseEntity<byte[]> Ocr(){
+
+
         try {
-            Process p=Runtime.getRuntime().exec("C:/Users/rezgu/PycharmProjects/pythonProject/dist/main.exe");
-
-
-            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            ProcessBuilder ps = new ProcessBuilder("py", "C:/Users/rezgu/PycharmProjects/pythonProject/main.py");
+            ps.redirectErrorStream(true);
+            Process pr = ps.start();
+  //          PythonInterpreter pythonInterpreter = new PythonInterpreter();
+   //         pythonInterpreter.execfile("C:/Users/rezgu/PycharmProjects/pythonProject/main.py",file);
+           Process p=Runtime.getRuntime().exec("C:/Users/rezgu/PycharmProjects/pythonProject/main.py");
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
             String s = null;
             // read the output
             while ((s = stdInput.readLine()) != null) {
@@ -274,7 +277,7 @@ public class FilesController {
 
             System.exit(-1);
 
-        }
-    }*/
+        }}
+
 
 }

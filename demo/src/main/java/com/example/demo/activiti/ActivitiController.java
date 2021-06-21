@@ -6,8 +6,10 @@ import com.example.demo.Repository.UsersRepository;
 import com.example.demo.mail.EmailSender;
 import lombok.AllArgsConstructor;
 import org.activiti.engine.HistoryService;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.util.json.JSONArray;
 import org.activiti.engine.impl.util.json.JSONObject;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -171,4 +173,19 @@ public class ActivitiController {
         logger.info("Task completed");
     }
 
-}
+    //completed tasks
+    /*@GetMapping("/listcompletedTaks")
+    public List<Task> getTasksCom() {
+        List<HistoricProcessInstance> historicProcessInstances = this.historyService.createHistoricProcessInstanceQuery().finished().list();
+
+        for (int i = 0; i < historicProcessInstances.size(); i++) {
+
+            List<Task> taskList = this.taskService.createTaskQuery().processInstanceId(historicProcessInstances.get(i).getId()).orderByTaskCreateTime().desc().list();
+            for (Task task : taskList) {
+                ProcessDefinition processDefinition = this.taskService.getVariables();
+                TaskRepresentation taskResponse = new TaskRepresentation(task);
+
+            }
+
+        }}*/
+    }

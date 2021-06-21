@@ -14,7 +14,7 @@ public class ChatRoomService {
     private ChatRoomRepository chatRoomRepository;
 
     public Optional<String> getChatId(
-            String senderId, String recipientId, boolean createIfNotExist) {
+            long senderId, long recipientId, boolean createIfNotExist) {
 
         return chatRoomRepository
                 .findBySenderIdAndRecipientId(senderId, recipientId)
@@ -24,7 +24,7 @@ public class ChatRoomService {
                         return  Optional.empty();
                     }
                     var chatId =
-                            String.format("%s_%s", senderId, recipientId);
+                            String.format("%d_%d", senderId, recipientId);
 
                     ChatRoom senderRecipient = ChatRoom
                             .builder()

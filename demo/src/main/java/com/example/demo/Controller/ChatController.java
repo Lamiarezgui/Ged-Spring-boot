@@ -19,7 +19,7 @@ public class ChatController {
     @Autowired private ChatMessageService chatMessageService;
     @Autowired private ChatRoomService chatRoomService;
 
-    @MessageMapping("/chat")
+   /* @MessageMapping("/chat")
     //@PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     public void processMessage(@Payload ChatMessage chatMessage) {
         var chatId = chatRoomService
@@ -33,13 +33,21 @@ public class ChatController {
                         saved.getId(),
                         saved.getSenderId(),
                         saved.getSenderName()));
+    }*/
+    @PostMapping("/messagerie")
+    public void sendmessage(@RequestBody ChatMessage chatMessage){
+        var chatId = chatRoomService
+                .getChatId(chatMessage.getSenderId(), chatMessage.getRecipientId(), true);
+        chatMessage.setChatId(chatId.get());
+        chatMessageService.save(chatMessage);
+
     }
 
     @GetMapping("/messages/{senderId}/{recipientId}/count")
    // @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     public ResponseEntity<Long> countNewMessages(
-            @PathVariable String senderId,
-            @PathVariable String recipientId) {
+            @PathVariable long senderId,
+            @PathVariable long recipientId) {
 
         return ResponseEntity
                 .ok(chatMessageService.countNewMessages(senderId, recipientId));
@@ -47,15 +55,15 @@ public class ChatController {
 
     @GetMapping("/messages/{senderId}/{recipientId}")
     //@PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
-    public ResponseEntity<?> findChatMessages ( @PathVariable String senderId,
-                                                @PathVariable String recipientId) {
+    public ResponseEntity<?> findChatMessages ( @PathVariable long senderId,
+                                                @PathVariable long recipientId) {
         return ResponseEntity
                 .ok(chatMessageService.findChatMessages(senderId, recipientId));
     }
 
     @GetMapping("/messages/{id}")
     //@PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
-    public ResponseEntity<?> findMessage (@PathVariable String id) throws ResourceNotFoundException {
+    public ResponseEntity<?> findMessage (@PathVariable long id) throws ResourceNotFoundException {
         return ResponseEntity
                 .ok(chatMessageService.findById(id));
     }
