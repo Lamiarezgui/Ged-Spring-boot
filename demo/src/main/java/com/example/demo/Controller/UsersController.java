@@ -111,7 +111,7 @@ public class UsersController {
     }
 
     //afficher la liste de tous les utilisateurs
-    @PreAuthorize("hasAnyRole('ROLE_INGENIEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/users")
     public List<Users> getAllUsers() {
         return usersService.getAllUsers();
