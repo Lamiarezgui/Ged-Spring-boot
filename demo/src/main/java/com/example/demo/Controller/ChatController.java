@@ -2,6 +2,7 @@ package com.example.demo.Controller;
 
 import com.example.demo.Model.ChatMessage;
 import com.example.demo.Model.ChatNotification;
+import com.example.demo.Model.ChatRoom;
 import com.example.demo.ResourceNotFoundException;
 import com.example.demo.Services.ChatMessageService;
 import com.example.demo.Services.ChatRoomService;
@@ -12,6 +13,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class ChatController {
@@ -59,6 +62,10 @@ public class ChatController {
                                                 @PathVariable long recipientId) {
         return ResponseEntity
                 .ok(chatMessageService.findChatMessages(senderId, recipientId));
+    }
+    @GetMapping("/chatRoom")
+    public List<ChatRoom> getRoom(){
+        return chatRoomService.getRoom();
     }
 
     @GetMapping("/messages/{id}")
