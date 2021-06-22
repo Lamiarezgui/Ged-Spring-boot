@@ -7,8 +7,7 @@ import com.example.demo.mail.EmailSender;
 import lombok.AllArgsConstructor;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.history.HistoricActivityInstance;
-import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.*;
 import org.activiti.engine.impl.util.json.JSONArray;
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -150,19 +149,11 @@ public class ActivitiController {
                 .list();
 
         return usertasks.stream()
-                .map(task -> new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId(), task.getAssignee(), taskService.getVariables(task.getId())))
+                .map(task -> new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId(), taskService.getVariables(task.getId())))
                 .collect(Collectors.toList());
     }
 
-    //get complete tasks for one user
-    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
-    @GetMapping("/completeTasks/{id}")
-    public List<Object> getCompletedTaks(@PathVariable long id) {
-        List<Task> usertasks = Collections.singletonList((Task) historyService.createHistoricTaskInstanceQuery().finished().taskAssignee(String.valueOf(id)).list());
-        return usertasks.stream()
-                .map(task -> new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId(), task.getAssignee(), taskService.getVariables(task.getId())))
-                .collect(Collectors.toList());
-    }
+
 
     //terminer le task
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
@@ -177,16 +168,35 @@ public class ActivitiController {
 
 
     //completed tasks
- /* @GetMapping("/listCompletedTasks")
-    public List<HistoricProcessInstance> getTasksCom() {
+    @GetMapping("/listCompletedTasks/{id}")
+    public List<TaskRepresentation> getTasksCom(@PathVariable("id") long id) {
+        List<HistoricTaskInstance> usertasks = historyService.createHistoricTaskInstanceQuery()
+                .taskAssignee(String.valueOf(id))
+                .orderByHistoricTaskInstanceEndTime().desc()
+                .list();
 
-      long count = historyService.createHistoricProcessInstanceQuery()
-             .finished()
-              .count();
-      System.out.println(count);
-      return List<HistoricProcessInstance> historicProcessInstances = historyService
-              .createHistoricProcessInstanceQuery()
-              .finished()
-              .orderByProcessInstanceStartTime().desc().list();
-    }*/
+            return usertasks.stream()
+                    .map(task -> new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId(), historyService.createHistoricVariableInstanceQuery().list()))
+                    .collect(Collectors.toList());
+
+    }
+    @GetMapping("/countcompletedTasks")
+    public long count(){
+       return  historyService.createHistoricTaskInstanceQuery()
+                .orderByTaskAssignee()
+               .desc()
+                .count();
+    }
+    public Map<String, Object> getVarUpdates(HistoricTaskInstance historicActivityInstance) {
+
+    Map<String, Object> updates = new HashMap<>();
+
+    List<HistoricDetail> historicUpdates = historyService.createHistoricDetailQuery()
+            .processInstanceId( historicActivityInstance.getProcessInstanceId())
+            .activityInstanceId( historicActivityInstance.getId())
+            .variableUpdates()
+            .list();
+  for (HistoricDetail historicDetail : historicUpdates)
+            updates.put( ((HistoricVariableUpdate) historicDetail).getVariableName(), ((HistoricVariableUpdate) historicDetail).getValue());
+  return updates;}
 }

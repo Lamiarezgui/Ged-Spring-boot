@@ -2,6 +2,11 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
+      <option name="id" value="a57a19e8-00e1-4d1c-b4db-dd1ee63b8230" />
+      <option name="name" value="a57a19e8-00e1-4d1c-b4db-dd1ee63b8230" />
+      <option name="url" value="https://maven.alfresco.com/nexus/content/groups/public/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="Central Repository" />
       <option name="url" value="https://repo.maven.apache.org/maven2" />

@@ -244,8 +244,8 @@ public class FilesController {
     }
 
 
-    @PostMapping("ocr")
-    public void Ocr(@RequestParam("file") MultipartFile file) throws IOException {
+    @GetMapping("ocr")
+    public void Ocr() throws IOException {
 
 
         try {
