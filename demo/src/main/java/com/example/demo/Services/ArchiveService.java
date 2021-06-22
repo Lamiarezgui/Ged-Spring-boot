@@ -57,8 +57,8 @@ public class ArchiveService {
         fichierRepository.ajouterFilesArchive(id, archive_id);
     }
 
-    public List<String> getFiles(String numDoss) {
-        return archiveRepository.getIdfiles(numDoss);
+    public List<FileEntity> getFiles(String numDoss) {
+        return archiveRepository.getfiles(numDoss);
     }
 
 /* public void download(HttpServletResponse response,

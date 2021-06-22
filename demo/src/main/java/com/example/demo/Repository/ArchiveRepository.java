@@ -1,15 +1,18 @@
 package com.example.demo.Repository;
 
 import com.example.demo.Model.Archive;
+import com.example.demo.Model.FileEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Transactional
 public interface ArchiveRepository extends JpaRepository<Archive, String> {
     @Query(value = "select count(f) as count,to_char(f.date,'MONTH') AS MONTH from archive f group by MONTH order by MONTH", nativeQuery = true)
     List<Object> countDossMonth();
@@ -26,8 +29,8 @@ public interface ArchiveRepository extends JpaRepository<Archive, String> {
     @Query("select f.id,f.name,f.date,f.size,f.user.lastName,f.user.firstName from Archive a inner join FileEntity f on f.archive.id=a.id where a.numDoss=:numDoss")
     List<Object> getContenu(String numDoss);
 
-    @Query("select f.id from Archive a inner join FileEntity f on f.archive.id=a.id where a.numDoss=:numDoss")
-    List<String> getIdfiles(String numDoss);
+    @Query("select f from Archive a inner join FileEntity f on f.archive.id=a.id where a.numDoss=:numDoss")
+    List<FileEntity> getfiles(String numDoss);
 
     @Query("select a.id from Archive a where a.numDoss=:numDoss")
     String findByNumDoss(String numDoss);

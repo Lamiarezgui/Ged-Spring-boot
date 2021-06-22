@@ -792,7 +792,7 @@ false YEKT
 false Z
 false Zulu
 </TimeZones>
-      <StartupTime>1624092290</StartupTime>
+      <StartupTime>1624309605</StartupTime>
     </root>
     <database id="2" parent="1" name="ged">
       <ObjectId>24612</ObjectId>
@@ -807,7 +807,7 @@ false Zulu
 13158||-9223372036854775808|U|G
 13158||10|U|G</Grants>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>1113</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1175</IntrospectionStateNumber>
       <Current>1</Current>
       <Relations>sequence|table|24981|24983|1
 </Relations>
@@ -879,7 +879,7 @@ false Zulu
       <Comment>standard public schema</Comment>
       <StateNumber>287</StateNumber>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>1114</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1176</IntrospectionStateNumber>
       <Current>1</Current>
     </schema>
     <extension id="18" parent="2" name="plpgsql">
@@ -1171,9 +1171,9 @@ false Zulu
       <StateNumber>1100</StateNumber>
     </table>
     <table id="67" parent="17" name="files">
-      <ObjectId>24655</ObjectId>
+      <ObjectId>33524</ObjectId>
       <Owner>postgres</Owner>
-      <StateNumber>1108</StateNumber>
+      <StateNumber>1163</StateNumber>
     </table>
     <table id="68" parent="17" name="files_versions">
       <ObjectId>24663</ObjectId>
@@ -4169,10 +4169,10 @@ tenant_id_</ColNames>
       <RefColNames>id</RefColNames>
     </foreign-key>
     <foreign-key id="488" parent="62" name="fkpaltaefr65al3b65yuinh7iva">
-      <ObjectId>24739</ObjectId>
-      <StateNumber>869</StateNumber>
+      <ObjectId>33532</ObjectId>
+      <StateNumber>1163</StateNumber>
       <ColNames>files_id</ColNames>
-      <RefTableId>24655</RefTableId>
+      <RefTableId>33524</RefTableId>
       <RefColPositions>1</RefColPositions>
       <RefTableName>files</RefTableName>
       <RefKeyName>files_pkey</RefKeyName>
@@ -4343,10 +4343,10 @@ tenant_id_</ColNames>
       <RefColNames>id</RefColNames>
     </foreign-key>
     <foreign-key id="511" parent="65" name="fkcsvr4vsrqml5fe3ruutyga804">
-      <ObjectId>25338</ObjectId>
-      <StateNumber>1103</StateNumber>
+      <ObjectId>33537</ObjectId>
+      <StateNumber>1164</StateNumber>
       <ColNames>files_id</ColNames>
-      <RefTableId>24655</RefTableId>
+      <RefTableId>33524</RefTableId>
       <RefColPositions>1</RefColPositions>
       <RefTableName>files</RefTableName>
       <RefKeyName>files_pkey</RefKeyName>
@@ -4400,72 +4400,72 @@ tenant_id_</ColNames>
       <Position>1</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
-      <StateNumber>834</StateNumber>
+      <StateNumber>1162</StateNumber>
       <TypeId>1043</TypeId>
     </column>
     <column id="519" parent="67" name="content_type">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
-      <StateNumber>834</StateNumber>
+      <StateNumber>1162</StateNumber>
       <TypeId>1043</TypeId>
     </column>
     <column id="520" parent="67" name="data">
       <Position>3</Position>
       <DataType>oid|0s</DataType>
-      <StateNumber>834</StateNumber>
+      <StateNumber>1162</StateNumber>
       <TypeId>26</TypeId>
     </column>
     <column id="521" parent="67" name="date">
       <Position>4</Position>
       <DataType>date|0s</DataType>
-      <StateNumber>1060</StateNumber>
+      <StateNumber>1162</StateNumber>
       <TypeId>1082</TypeId>
     </column>
     <column id="522" parent="67" name="name">
       <Position>5</Position>
       <DataType>varchar(255)|0s</DataType>
-      <StateNumber>834</StateNumber>
+      <StateNumber>1162</StateNumber>
       <TypeId>1043</TypeId>
     </column>
     <column id="523" parent="67" name="privilege">
       <Position>6</Position>
       <DataType>varchar(255)|0s</DataType>
-      <StateNumber>834</StateNumber>
+      <StateNumber>1162</StateNumber>
       <TypeId>1043</TypeId>
     </column>
     <column id="524" parent="67" name="size">
       <Position>7</Position>
       <DataType>bigint|0s</DataType>
-      <StateNumber>834</StateNumber>
+      <StateNumber>1162</StateNumber>
       <TypeId>20</TypeId>
     </column>
     <column id="525" parent="67" name="archive_id">
       <Position>8</Position>
       <DataType>varchar(255)|0s</DataType>
-      <StateNumber>834</StateNumber>
+      <StateNumber>1162</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="526" parent="67" name="groupe_id">
+    <column id="526" parent="67" name="chat_message_id">
+      <Position>9</Position>
+      <DataType>bigint|0s</DataType>
+      <StateNumber>1162</StateNumber>
+      <TypeId>20</TypeId>
+    </column>
+    <column id="527" parent="67" name="groupe_id">
       <Position>10</Position>
       <DataType>bigint|0s</DataType>
-      <StateNumber>834</StateNumber>
+      <StateNumber>1162</StateNumber>
       <TypeId>20</TypeId>
     </column>
-    <column id="527" parent="67" name="user_id">
+    <column id="528" parent="67" name="user_id">
       <Position>11</Position>
       <DataType>bigint|0s</DataType>
-      <StateNumber>834</StateNumber>
-      <TypeId>20</TypeId>
-    </column>
-    <column id="528" parent="67" name="chat_message_id">
-      <Position>12</Position>
-      <DataType>bigint|0s</DataType>
-      <StateNumber>1108</StateNumber>
+      <StateNumber>1162</StateNumber>
       <TypeId>20</TypeId>
     </column>
     <index id="529" parent="67" name="files_pkey">
-      <ObjectId>24661</ObjectId>
-      <StateNumber>1051</StateNumber>
+      <ObjectId>33530</ObjectId>
+      <StateNumber>1162</StateNumber>
       <ColNames>id</ColNames>
       <Unique>1</Unique>
       <Primary>1</Primary>
@@ -4475,15 +4475,15 @@ tenant_id_</ColNames>
       <ClassIds>3126</ClassIds>
     </index>
     <key id="530" parent="67" name="files_pkey">
-      <ObjectId>24662</ObjectId>
-      <StateNumber>834</StateNumber>
+      <ObjectId>33531</ObjectId>
+      <StateNumber>1162</StateNumber>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>files_pkey</UnderlyingIndexName>
     </key>
     <foreign-key id="531" parent="67" name="fkhu9robb0cva6wv9yrsnkwfn21">
-      <ObjectId>24769</ObjectId>
-      <StateNumber>875</StateNumber>
+      <ObjectId>33542</ObjectId>
+      <StateNumber>1165</StateNumber>
       <ColNames>archive_id</ColNames>
       <RefTableId>24613</RefTableId>
       <RefColPositions>1</RefColPositions>
@@ -4491,9 +4491,19 @@ tenant_id_</ColNames>
       <RefKeyName>archive_pkey</RefKeyName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="532" parent="67" name="fkj8abqhfc4mc534b58t3qgckc1">
-      <ObjectId>24779</ObjectId>
-      <StateNumber>877</StateNumber>
+    <foreign-key id="532" parent="67" name="fkikgorcflj9w8784ccukcnrpqn">
+      <ObjectId>33547</ObjectId>
+      <StateNumber>1166</StateNumber>
+      <ColNames>chat_message_id</ColNames>
+      <RefTableId>25320</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>chat_message</RefTableName>
+      <RefKeyName>chat_message_pkey</RefKeyName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="533" parent="67" name="fkj8abqhfc4mc534b58t3qgckc1">
+      <ObjectId>33552</ObjectId>
+      <StateNumber>1167</StateNumber>
       <ColNames>groupe_id</ColNames>
       <RefTableId>24669</RefTableId>
       <RefColPositions>1</RefColPositions>
@@ -4501,24 +4511,14 @@ tenant_id_</ColNames>
       <RefKeyName>groupe_pkey</RefKeyName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="533" parent="67" name="fkdgr5hx49828s5vhjo1s8q3wdp">
-      <ObjectId>24784</ObjectId>
-      <StateNumber>878</StateNumber>
+    <foreign-key id="534" parent="67" name="fkdgr5hx49828s5vhjo1s8q3wdp">
+      <ObjectId>33557</ObjectId>
+      <StateNumber>1168</StateNumber>
       <ColNames>user_id</ColNames>
       <RefTableId>24683</RefTableId>
       <RefColPositions>1</RefColPositions>
       <RefTableName>users</RefTableName>
       <RefKeyName>users_pkey</RefKeyName>
-      <RefColNames>id</RefColNames>
-    </foreign-key>
-    <foreign-key id="534" parent="67" name="fkikgorcflj9w8784ccukcnrpqn">
-      <ObjectId>25348</ObjectId>
-      <StateNumber>1109</StateNumber>
-      <ColNames>chat_message_id</ColNames>
-      <RefTableId>25320</RefTableId>
-      <RefColPositions>1</RefColPositions>
-      <RefTableName>chat_message</RefTableName>
-      <RefKeyName>chat_message_pkey</RefKeyName>
       <RefColNames>id</RefColNames>
     </foreign-key>
     <column id="535" parent="68" name="file_entity_id">
@@ -4552,10 +4552,10 @@ tenant_id_</ColNames>
       <UnderlyingIndexName>uk_8daiqg3h0qade1l1eh6g86xjy</UnderlyingIndexName>
     </key>
     <foreign-key id="539" parent="68" name="fkg071m8wdc58ir7ka0y9e8iun">
-      <ObjectId>24794</ObjectId>
-      <StateNumber>880</StateNumber>
+      <ObjectId>33562</ObjectId>
+      <StateNumber>1169</StateNumber>
       <ColNames>file_entity_id</ColNames>
-      <RefTableId>24655</RefTableId>
+      <RefTableId>33524</RefTableId>
       <RefColPositions>1</RefColPositions>
       <RefTableName>files</RefTableName>
       <RefKeyName>files_pkey</RefKeyName>
@@ -4648,10 +4648,10 @@ tenant_id_</ColNames>
       <RefColNames>id</RefColNames>
     </foreign-key>
     <foreign-key id="551" parent="70" name="fksxw111aapxw6rie8kio5ysstl">
-      <ObjectId>24799</ObjectId>
-      <StateNumber>881</StateNumber>
+      <ObjectId>33567</ObjectId>
+      <StateNumber>1170</StateNumber>
       <ColNames>files_id</ColNames>
-      <RefTableId>24655</RefTableId>
+      <RefTableId>33524</RefTableId>
       <RefColPositions>1</RefColPositions>
       <RefTableName>files</RefTableName>
       <RefKeyName>files_pkey</RefKeyName>
@@ -4887,10 +4887,10 @@ tenant_id_</ColNames>
       <RefColNames>id</RefColNames>
     </foreign-key>
     <foreign-key id="583" parent="74" name="fkjsb7fxr1daatfphbmyhinpic7">
-      <ObjectId>24829</ObjectId>
-      <StateNumber>887</StateNumber>
+      <ObjectId>33572</ObjectId>
+      <StateNumber>1171</StateNumber>
       <ColNames>file_entity_id</ColNames>
-      <RefTableId>24655</RefTableId>
+      <RefTableId>33524</RefTableId>
       <RefColPositions>1</RefColPositions>
       <RefTableName>files</RefTableName>
       <RefKeyName>files_pkey</RefKeyName>
@@ -5147,10 +5147,10 @@ tenant_id_</ColNames>
       <RefColNames>id</RefColNames>
     </foreign-key>
     <foreign-key id="617" parent="78" name="fkihmdwy182l74y84rnnvr9xmqi">
-      <ObjectId>24874</ObjectId>
-      <StateNumber>896</StateNumber>
+      <ObjectId>33577</ObjectId>
+      <StateNumber>1172</StateNumber>
       <ColNames>file_entity_id</ColNames>
-      <RefTableId>24655</RefTableId>
+      <RefTableId>33524</RefTableId>
       <RefColPositions>1</RefColPositions>
       <RefTableName>files</RefTableName>
       <RefKeyName>files_pkey</RefKeyName>

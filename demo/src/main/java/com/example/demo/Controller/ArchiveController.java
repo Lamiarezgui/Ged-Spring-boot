@@ -20,11 +20,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
@@ -73,7 +75,6 @@ public class ArchiveController {
 
     }
 
-    private static final int BUFFER_SIZE = 2 * 1024;
 
     /*
         @GetMapping("/zip/{numDoss}")
@@ -117,23 +118,8 @@ public class ArchiveController {
             }
         }
     */
-    @GetMapping(value = "/zip-download/{numDoss}")
-    public void zipDownload(@PathVariable String numDoss, HttpServletResponse response) throws IOException {
-        List<String> liste = archiveService.getFiles(numDoss);
-        ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream());
-        for (String ids : liste) {
-            Optional<FileEntity> fileEntityOptional = fileService.getFile(ids);
-            ZipEntry zipEntry = new ZipEntry(fileEntityOptional.get().getName());
-            zipOut.putNextEntry(zipEntry);
-            zipOut.closeEntry();
 
-        }
-        zipOut.finish();
-        zipOut.close();
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/x-msdownload");
-        response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= " + numDoss);
-    }
+
 
     //ajouter un fichier et ses versions existe deja dans l'app
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
@@ -174,19 +160,56 @@ public class ArchiveController {
     FilesController filesController;
 
     //download files in archive
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("archive/{numDoss}")
-    public ResponseEntity<?> downLoad(@PathVariable("numDoss") String numDoss) {
-        List<String> list = archiveRepository.getIdfiles(numDoss);
-        for (String l : list) {
-            return getFiless(l);
-        }
-        System.out.println(list);
-        return downLoad(numDoss);
-    }
+    public void doGet(@PathVariable("numDoss") String numDoss, HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-    public ResponseEntity<byte[]> getFiless(String l) {
+        // Set the content type based to zip
+        response.setHeader("Content-Type", "application/zip");
+        response.setHeader("Content-Disposition",
+                "attachment; filename=archiveDossier"+numDoss+".zip");
 
-        return filesController.getFile(l);
+        // List of files to be downloaded
+
+            List<FileEntity> files = archiveRepository.getfiles(numDoss);
+
+            ServletOutputStream out = response.getOutputStream();
+            ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(out));
+            for (FileEntity file : files) {
+
+                zos.putNextEntry(new ZipEntry(file.getName()));
+
+                // Get the file
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(String.valueOf(file));
+
+                } catch (FileNotFoundException fnfe) {
+                    // If the file does not exists, write an error entry instead of
+                    // file
+                    // contents
+                    zos.write(("ERROR: Could not find file " + file.getName())
+                            .getBytes());
+                    zos.closeEntry();
+                    continue;
+                }
+
+                BufferedInputStream fif = new BufferedInputStream(fis);
+
+                // Write the contents of the file
+                int data = 0;
+                while ((data = fif.read()) != -1) {
+                    zos.write(data);
+                }
+                fif.close();
+
+                zos.closeEntry();
+                System.out.println("Finished adding file " + file.getName());
+            }
+
+            zos.close();
+
     }
 
 

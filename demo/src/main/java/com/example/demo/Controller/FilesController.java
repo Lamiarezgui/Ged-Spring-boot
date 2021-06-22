@@ -20,10 +20,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.xml.ws.Response;
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -87,7 +86,7 @@ public class FilesController {
     FichierRepository fichierRepository;
 
     // afficher la liste des fichiers pour un utilisateur
-    //@PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/ListFiles/{id}")
     public List<Object> list(@PathVariable("id") long id) {
         return fileService.getAllFiles(id);
@@ -95,14 +94,14 @@ public class FilesController {
 
     // afficher la liste des fichiers pour un groupe
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
-   // @GetMapping("ListFilesGroupe/{groupe_id}")
+    // @GetMapping("ListFilesGroupe/{groupe_id}")
     public List<Object> FilesGroupe(@PathVariable("groupe_id") long id) {
         return fileService.getAllFilesGr(id);
     }
 
     // afficher la liste des fichiers public
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
-   // @GetMapping("/public")
+    // @GetMapping("/public")
     public List<Object> listFilesPublic() {
         return fileService.getAllFilesPublic();
     }
@@ -146,7 +145,7 @@ public class FilesController {
 
 
     //exporter le fichier
-   // @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable String id) {
         Optional<FileEntity> fileEntityOptional = fileService.getFile(id);
@@ -240,21 +239,14 @@ public class FilesController {
     }
 
 
-
     @PostMapping("ocr")
-   public void Ocr(@RequestParam("file") MultipartFile file){
-
-
+    public void Ocr(@RequestParam("file") MultipartFile file) throws IOException {
+       String path=file.getResource().getFile().getAbsoluteFile().getPath();
 
         try {
-            ProcessBuilder ps = new ProcessBuilder("py", "C:/Users/rezgu/PycharmProjects/pythonProject/main.py");
-            ps.redirectErrorStream(true);
-            Process pr = ps.start();
-            PythonInterpreter pythonInterpreter = new PythonInterpreter();
-            pythonInterpreter.execfile("C:/Users/rezgu/PycharmProjects/pythonProject/main.py");
-            Process p=Runtime.getRuntime().exec("C:/Users/rezgu/PycharmProjects/pythonProject/dist/main.exe");
-            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+           Process proc=Runtime.getRuntime().exec(new String[]{"C:/Users/rezgu/PycharmProjects/pythonProject/dist/main.exe", path});
+            BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
             String s = null;
             // read the output
             while ((s = stdInput.readLine()) != null) {
@@ -278,7 +270,8 @@ public class FilesController {
 
             System.exit(-1);
 
-        }}
+        }
+    }
 
 
 }

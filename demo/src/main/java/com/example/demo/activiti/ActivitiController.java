@@ -6,10 +6,8 @@ import com.example.demo.Repository.UsersRepository;
 import com.example.demo.mail.EmailSender;
 import lombok.AllArgsConstructor;
 import org.activiti.engine.HistoryService;
-import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.util.json.JSONArray;
 import org.activiti.engine.impl.util.json.JSONObject;
-import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -28,11 +26,11 @@ public class ActivitiController {
     private static final Logger logger = LoggerFactory.getLogger(ActivitiController.class);
 
     @Autowired
-    private RuntimeService runtimeService;
+    private final RuntimeService runtimeService;
     UsersRepository usersRepository;
     @Autowired
-    private TaskService taskService;
-    private HistoryService historyService;
+    private final TaskService taskService;
+    private final HistoryService historyService;
     private final EmailSender emailSender;
 
     //ajouter un nouveau process et les variables
@@ -155,7 +153,7 @@ public class ActivitiController {
     //get complete tasks for one user
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/completeTasks/{id}")
-    public List<TaskRepresentation> getCompletedTaks(@PathVariable long id) {
+    public List<Object> getCompletedTaks(@PathVariable long id) {
         List<Task> usertasks = Collections.singletonList((Task) historyService.createHistoricTaskInstanceQuery().finished().taskAssignee(String.valueOf(id)).list());
         return usertasks.stream()
                 .map(task -> new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId(), task.getAssignee(), taskService.getVariables(task.getId())))
@@ -173,19 +171,10 @@ public class ActivitiController {
         logger.info("Task completed");
     }
 
+
     //completed tasks
-    /*@GetMapping("/listcompletedTaks")
-    public List<Task> getTasksCom() {
-        List<HistoricProcessInstance> historicProcessInstances = this.historyService.createHistoricProcessInstanceQuery().finished().list();
+   // @GetMapping("/listCompletedTasks")
+  //  public List<Object> getTasksCom() {
 
-        for (int i = 0; i < historicProcessInstances.size(); i++) {
-
-            List<Task> taskList = this.taskService.createTaskQuery().processInstanceId(historicProcessInstances.get(i).getId()).orderByTaskCreateTime().desc().list();
-            for (Task task : taskList) {
-                ProcessDefinition processDefinition = this.taskService.getVariables();
-                TaskRepresentation taskResponse = new TaskRepresentation(task);
-
-            }
-
-        }}*/
-    }
+  //  }
+}

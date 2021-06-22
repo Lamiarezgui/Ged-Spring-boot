@@ -12,6 +12,7 @@ import java.util.Map;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class TaskRepresentation {
 
     private String id;
@@ -23,13 +24,6 @@ public class TaskRepresentation {
         this.id=id;
         this.name=name;
         this.processInstanceId=processInstanceId;
-        this.variables=variables;
-    }
-    public TaskRepresentation(String id, String name, String processInstanceId, String assignee, Map<String, Object> variables){
-        this.id=id;
-        this.name=name;
-        this.processInstanceId=processInstanceId;
-        this.assignee=assignee;
         this.variables=variables;
     }
 
