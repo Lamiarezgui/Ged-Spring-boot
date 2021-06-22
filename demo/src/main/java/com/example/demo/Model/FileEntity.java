@@ -43,6 +43,7 @@ public class FileEntity {
     private Archive archive;
     @ManyToOne
     private Groupe groupe;
+    private int var;
 
 
     public FileEntity() {

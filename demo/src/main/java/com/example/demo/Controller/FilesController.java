@@ -145,9 +145,10 @@ public class FilesController {
 
 
     //exporter le fichier
-    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
+    //@PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable String id) {
+        int v=1;
         Optional<FileEntity> fileEntityOptional = fileService.getFile(id);
 
         if (!fileEntityOptional.isPresent()) {
@@ -156,11 +157,15 @@ public class FilesController {
         }
 
         FileEntity fileEntity = fileEntityOptional.get();
-
+        fileService.addVar(id);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileEntity.getName() + "\"")
                 .contentType(MediaType.valueOf(fileEntity.getContentType()))
                 .body(fileEntity.getData());
+    }
+    @GetMapping("/countexported")
+    public List<Object> countvar(){
+       return fichierRepository.countFilesExportedbyName();
     }
 
     //visualiser un fichier
@@ -241,10 +246,10 @@ public class FilesController {
 
     @PostMapping("ocr")
     public void Ocr(@RequestParam("file") MultipartFile file) throws IOException {
-       String path=file.getResource().getFile().getAbsoluteFile().getPath();
+
 
         try {
-           Process proc=Runtime.getRuntime().exec(new String[]{"C:/Users/rezgu/PycharmProjects/pythonProject/dist/main.exe", path});
+            Process proc = Runtime.getRuntime().exec(new String[]{"C:/Users/rezgu/PycharmProjects/pythonProject/dist/main.exe"});
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
             BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
             String s = null;

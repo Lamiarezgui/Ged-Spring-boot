@@ -21,6 +21,8 @@ public interface FichierRepository extends JpaRepository<FileEntity, String> {
     @Query(value = "select count(f)as count,EXTRACT(DAY from f.date) AS day from files f  group by day order by day", nativeQuery = true)
     List<Object> countFilesDay();
 
+    @Query(value = "select Sum(f.var) as count , f.name from files f group by f.name", nativeQuery = true)
+    List<Object> countFilesExportedbyName();
 
     @Query("select v.id,v.name,v.contentType,v.size,v.date,v.user.lastName,v.user.firstName from FileEntity f  inner join Versions v on f.id=v.fileEntity.id and f.id=:id")
     List<Object> getVersionFile(String id);
@@ -55,4 +57,9 @@ public interface FichierRepository extends JpaRepository<FileEntity, String> {
 
     @Query("select f.id,f.name,f.contentType,f.size,f.date from FileEntity f ")
     List<Object> getAllFiles();
+
+    @Modifying
+    @Transactional
+    @Query(value = "update FileEntity f set f.var=:var1 where f.id=:id ")
+    void addVar(String id, int var1);
 }

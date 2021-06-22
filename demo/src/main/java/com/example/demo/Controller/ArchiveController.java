@@ -75,50 +75,10 @@ public class ArchiveController {
 
     }
 
-
-    /*
-        @GetMapping("/zip/{numDoss}")
-        public void toZip(@PathVariable String numDoss, OutputStream out, HttpServletResponse response) throws RuntimeException {
-            long start = System.currentTimeMillis();
-            ZipOutputStream zos = null;
-
-            try {
-                zos = new ZipOutputStream(out);
-                List<String> list = archiveRepository.getIdfiles(numDoss);
-                for (String l : list) {
-                    ResponseEntity<byte[]> srcFiles = filesController.getFile(l);
-
-                    for (byte srcFile : srcFiles) {
-                        byte[] buf = new byte[BUFFER_SIZE];
-                        zos.putNextEntry(new ZipEntry(srcFiles.getClass().getName()));
-                        int len;
-                        FileInputStream in = new FileInputStream(String.valueOf(srcFile));
-                        while ((len = in.read(buf)) != -1) {
-                            zos.write(buf, 0, len);
-                        }
-                        zos.closeEntry();
-                        in.close();
-                        response.setStatus(HttpServletResponse.SC_OK);
-                        response.setContentType("application/x-msdownload");
-                        response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=archive "+numDoss);
-                    }
-                }
-                long end = System.currentTimeMillis();
-                System.out.println("Compression completed, time consuming:" + (end - start) + " ms");
-            } catch (Exception e) {
-                throw new RuntimeException("zip error from ZipUtils", e);
-            } finally {
-                if (zos != null) {
-                    try {
-                        zos.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    */
-
+    @GetMapping("/countexported")
+    public List<Object> countvar() {
+        return archiveRepository.countDossExportedbyName();
+    }
 
 
     //ajouter un fichier et ses versions existe deja dans l'app
@@ -168,47 +128,47 @@ public class ArchiveController {
         // Set the content type based to zip
         response.setHeader("Content-Type", "application/zip");
         response.setHeader("Content-Disposition",
-                "attachment; filename=archiveDossier"+numDoss+".zip");
+                "attachment; filename=archiveDossier" + numDoss + ".zip");
 
         // List of files to be downloaded
 
-            List<FileEntity> files = archiveRepository.getfiles(numDoss);
+        List<FileEntity> files = archiveRepository.getfiles(numDoss);
+        archiveService.addVar(numDoss);
+        ServletOutputStream out = response.getOutputStream();
+        ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(out));
+        for (FileEntity file : files) {
 
-            ServletOutputStream out = response.getOutputStream();
-            ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(out));
-            for (FileEntity file : files) {
+            zos.putNextEntry(new ZipEntry(file.getName()));
 
-                zos.putNextEntry(new ZipEntry(file.getName()));
+            // Get the file
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(String.valueOf(file));
 
-                // Get the file
-                FileInputStream fis = null;
-                try {
-                    fis = new FileInputStream(String.valueOf(file));
-
-                } catch (FileNotFoundException fnfe) {
-                    // If the file does not exists, write an error entry instead of
-                    // file
-                    // contents
-                    zos.write(("ERROR: Could not find file " + file.getName())
-                            .getBytes());
-                    zos.closeEntry();
-                    continue;
-                }
-
-                BufferedInputStream fif = new BufferedInputStream(fis);
-
-                // Write the contents of the file
-                int data = 0;
-                while ((data = fif.read()) != -1) {
-                    zos.write(data);
-                }
-                fif.close();
-
+            } catch (FileNotFoundException fnfe) {
+                // If the file does not exists, write an error entry instead of
+                // file
+                // contents
+                zos.write(("ERROR: Could not find file " + file.getName())
+                        .getBytes());
                 zos.closeEntry();
-                System.out.println("Finished adding file " + file.getName());
+                continue;
             }
 
-            zos.close();
+            BufferedInputStream fif = new BufferedInputStream(fis);
+
+            // Write the contents of the file
+            int data = 0;
+            while ((data = fif.read()) != -1) {
+                zos.write(data);
+            }
+            fif.close();
+
+            zos.closeEntry();
+            System.out.println("Finished adding file " + file.getName());
+        }
+
+        zos.close();
 
     }
 

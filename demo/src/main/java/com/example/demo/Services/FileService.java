@@ -27,7 +27,7 @@ public class FileService {
         this.fileRepository = fileRepository;
     }
 
-    public void save(MultipartFile file, Users user,String priv) throws IOException {
+    public void save(MultipartFile file, Users user, String priv) throws IOException {
         FileEntity fileEntity = new FileEntity();
         fileEntity.setName(StringUtils.cleanPath(file.getOriginalFilename()));
         fileEntity.setContentType(file.getContentType());
@@ -38,7 +38,8 @@ public class FileService {
         fileEntity.setUser(user);
         fileRepository.save(fileEntity);
     }
-    public void saveGr(MultipartFile file, Users user,Groupe groupe,String priv) throws IOException {
+
+    public void saveGr(MultipartFile file, Users user, Groupe groupe, String priv) throws IOException {
         FileEntity fileEntity = new FileEntity();
         fileEntity.setName(StringUtils.cleanPath(file.getOriginalFilename()));
         fileEntity.setContentType(file.getContentType());
@@ -58,22 +59,26 @@ public class FileService {
     public List<Object> getAllFiles(long id) {
         return fileRepository.getAllFilesP(id);
     }
+
     public List<Object> getAllFilesGr(long id) {
         return fileRepository.getAllFilesG(id);
     }
+
     public List<Object> getAllFilesPublic() {
         return fileRepository.getAllFilesPublic();
     }
+
     public List<Object> getVersionsFile(String id) {
         return fileRepository.getVersionFile(id);
     }
 
     public List<Object> getAllFiles() {
-       return fileRepository.getAllFiles();
+        return fileRepository.getAllFiles();
     }
-ArchiveRepository archiveRepository;
 
-    public void saveArchive(MultipartFile file,Users user,Archive archive,String privilege) throws IOException {
+    ArchiveRepository archiveRepository;
+
+    public void saveArchive(MultipartFile file, Users user, Archive archive, String privilege) throws IOException {
         FileEntity fileEntity = new FileEntity();
         fileEntity.setName(StringUtils.cleanPath(file.getOriginalFilename()));
         fileEntity.setContentType(file.getContentType());
@@ -85,6 +90,14 @@ ArchiveRepository archiveRepository;
 
         fileEntity.setArchive(archive);
         fileRepository.save(fileEntity);
+    }
+
+    public void addVar(String id) {
+      FileEntity f=  fileRepository.getOne(id);
+        int v=f.getVar();
+        int res=v+1;
+        System.out.println(res);
+        fileRepository.addVar(id,res);
     }
 
    /* public boolean delete(String id) {

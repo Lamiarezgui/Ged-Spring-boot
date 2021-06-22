@@ -31,6 +31,7 @@ public class Archive {
     private String matricule;
     private String cin;
     private String motdeCle;
+    private int var;
 
     @OneToMany
     private List<FileEntity> files;

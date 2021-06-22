@@ -56,6 +56,14 @@ public class ArchiveService {
         versionRepository.ajouterVersionsArchive(id, archive_id);
         fichierRepository.ajouterFilesArchive(id, archive_id);
     }
+    public void addVar(String numDoss) {
+        Archive f=  archiveRepository.findByDoss(numDoss);
+        int v=f.getVar();
+        int res=v+1;
+        System.out.println(res);
+        archiveRepository.addVar(numDoss,res);
+    }
+
 
     public List<FileEntity> getFiles(String numDoss) {
         return archiveRepository.getfiles(numDoss);
