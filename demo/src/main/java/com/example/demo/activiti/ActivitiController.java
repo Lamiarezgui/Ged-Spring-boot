@@ -154,7 +154,6 @@ public class ActivitiController {
     }
 
 
-
     //terminer le task
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/complete-task/{processInstanceId}")
@@ -171,32 +170,35 @@ public class ActivitiController {
     @GetMapping("/listCompletedTasks/{id}")
     public List<TaskRepresentation> getTasksCom(@PathVariable("id") long id) {
         List<HistoricTaskInstance> usertasks = historyService.createHistoricTaskInstanceQuery()
-                .taskAssignee(String.valueOf(id))
+                .taskAssignee(String.valueOf(id)).finished()
                 .orderByHistoricTaskInstanceEndTime().desc()
                 .list();
 
-            return usertasks.stream()
-                    .map(task -> new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId(), historyService.createHistoricVariableInstanceQuery().list()))
-                    .collect(Collectors.toList());
+        return usertasks.stream()
+                .map(task -> new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId(), historyService.createHistoricVariableInstanceQuery().list()))
+                .collect(Collectors.toList());
 
     }
+
     @GetMapping("/countcompletedTasks")
-    public long count(){
-       return  historyService.createHistoricTaskInstanceQuery()
+    public long count() {
+        return historyService.createHistoricTaskInstanceQuery().finished()
                 .orderByTaskAssignee()
-               .desc()
+                .desc()
                 .count();
     }
+
     public Map<String, Object> getVarUpdates(HistoricTaskInstance historicActivityInstance) {
 
-    Map<String, Object> updates = new HashMap<>();
+        Map<String, Object> updates = new HashMap<>();
 
-    List<HistoricDetail> historicUpdates = historyService.createHistoricDetailQuery()
-            .processInstanceId( historicActivityInstance.getProcessInstanceId())
-            .activityInstanceId( historicActivityInstance.getId())
-            .variableUpdates()
-            .list();
-  for (HistoricDetail historicDetail : historicUpdates)
-            updates.put( ((HistoricVariableUpdate) historicDetail).getVariableName(), ((HistoricVariableUpdate) historicDetail).getValue());
-  return updates;}
+        List<HistoricDetail> historicUpdates = historyService.createHistoricDetailQuery()
+                .processInstanceId(historicActivityInstance.getProcessInstanceId())
+                .activityInstanceId(historicActivityInstance.getId())
+                .variableUpdates()
+                .list();
+        for (HistoricDetail historicDetail : historicUpdates)
+            updates.put(((HistoricVariableUpdate) historicDetail).getVariableName(), ((HistoricVariableUpdate) historicDetail).getValue());
+        return updates;
+    }
 }

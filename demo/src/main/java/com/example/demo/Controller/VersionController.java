@@ -59,8 +59,9 @@ public class VersionController {
 
         return fileResponse;
     }
-//exporter une version
-@PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
+
+    //exporter une version
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getVersion(@PathVariable String id) {
         Optional<Versions> versionsOptional = versionsService.getVersions(id);
@@ -76,6 +77,7 @@ public class VersionController {
                 .contentType(MediaType.valueOf(versions.getContentType()))
                 .body(versions.getData());
     }
+
     //visualiser une version
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("viewVersion/{id}")
