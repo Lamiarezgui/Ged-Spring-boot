@@ -94,27 +94,27 @@ public class FilesController {
 
     // afficher la liste des fichiers pour un groupe
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
-    // @GetMapping("ListFilesGroupe/{groupe_id}")
+    @GetMapping("ListFilesGroupe/{groupe_id}")
     public List<Object> FilesGroupe(@PathVariable("groupe_id") long id) {
         return fileService.getAllFilesGr(id);
     }
 
     // afficher la liste des fichiers public
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
-    // @GetMapping("/public")
+    @GetMapping("/public")
     public List<Object> listFilesPublic() {
         return fileService.getAllFilesPublic();
     }
 
     //afficher les versions de fichier
-    //@PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/ListVersions/{id}")
     public List<Object> getVersionsFile(@PathVariable String id) {
         return fileService.getVersionsFile(id);
     }
 
     //afficher tous les fichiers avec les fichiers des utilisateurs supprimes
-    //@PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping
     public List<Object> listFiles() {
         return fileService.getAllFiles();
@@ -145,10 +145,10 @@ public class FilesController {
 
 
     //exporter le fichier
-    //@PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
+    @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable String id) {
-        int v=1;
+
         Optional<FileEntity> fileEntityOptional = fileService.getFile(id);
 
         if (!fileEntityOptional.isPresent()) {
@@ -163,9 +163,10 @@ public class FilesController {
                 .contentType(MediaType.valueOf(fileEntity.getContentType()))
                 .body(fileEntity.getData());
     }
+
     @GetMapping("/countexported")
-    public List<Object> countvar(){
-       return fichierRepository.countFilesExportedbyName();
+    public List<Object> countvar() {
+        return fichierRepository.countFilesExportedbyName();
     }
 
     //visualiser un fichier
