@@ -32,11 +32,11 @@ public class TaskRepresentation {
     }
 
 
-    public TaskRepresentation(String id, String name, String processInstanceId,List<HistoricVariableInstance> var) {
+    public TaskRepresentation(String id, String name, String processInstanceId) {
         this.id=id;
         this.name=name;
         this.processInstanceId=processInstanceId;
-        this.var=var;
     }
+
 }
 

@@ -55,6 +55,7 @@ public class ArchiveController {
     }
 
     // countDoss per month
+    @PreAuthorize("hasAnyRole('ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/countDossPerMonth")
     public List<Object> countFiles() {
         return archiveRepository.countDossMonth();
@@ -62,6 +63,7 @@ public class ArchiveController {
     }
 
     // countDoss per year
+    @PreAuthorize("hasAnyRole('ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/countDossPerYear")
     public List<Object> countFilesperYear() {
         return archiveRepository.countDossYear();
@@ -69,12 +71,14 @@ public class ArchiveController {
     }
 
     //count Doss per day
+    @PreAuthorize("hasAnyRole('ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/countDossPerDay")
     public List<Object> countFilesperDay() {
         return archiveRepository.countDossDay();
 
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/countexported")
     public List<Object> countvar() {
         return archiveRepository.countDossExportedbyName();
@@ -119,7 +123,7 @@ public class ArchiveController {
 
     FilesController filesController;
 
-    //download files in archive
+    //download dossier archive
     @PreAuthorize("hasAnyRole('ROLE_CONTROLEUR','ROLE_SUPERVISEUR','ROLE_INGENIEUR','ROLE_ADMINISTRATEUR')")
     @GetMapping("archive/{numDoss}")
     public void doGet(@PathVariable("numDoss") String numDoss, HttpServletRequest request, HttpServletResponse response)

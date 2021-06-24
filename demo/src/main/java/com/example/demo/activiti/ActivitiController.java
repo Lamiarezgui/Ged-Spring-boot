@@ -44,7 +44,7 @@ public class ActivitiController {
     @PostMapping("/start-process")
     public String startProcess(@RequestBody FormRepresentation formRepresentation) {
         Map<String, Object> variables = new HashMap<>();
-        Format f = new SimpleDateFormat("dd/MMMM/yyyy",Locale.FRANCE);
+        Format f = new SimpleDateFormat("dd/MMMM/yyyy", Locale.FRANCE);
         variables.put("task", formRepresentation.getTask());
         variables.put("de", f.format(formRepresentation.getDe()));
         variables.put("description", formRepresentation.getDescription());
@@ -178,7 +178,7 @@ public class ActivitiController {
                 .list();
 
         return usertasks.stream()
-                .map(task -> new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId(), historyService.createHistoricVariableInstanceQuery().list()))
+                .map(task -> new TaskRepresentation(task.getId(), task.getName(), task.getProcessInstanceId()))
                 .collect(Collectors.toList());
 
     }
@@ -187,19 +187,5 @@ public class ActivitiController {
     public long count() {
         return historyService.createHistoricTaskInstanceQuery().finished()
                 .count();
-    }
-
-    public Map<String, Object> getVarUpdates(HistoricTaskInstance historicActivityInstance) {
-
-        Map<String, Object> updates = new HashMap<>();
-
-        List<HistoricDetail> historicUpdates = historyService.createHistoricDetailQuery()
-                .processInstanceId(historicActivityInstance.getProcessInstanceId())
-                .activityInstanceId(historicActivityInstance.getId())
-                .variableUpdates()
-                .list();
-        for (HistoricDetail historicDetail : historicUpdates)
-            updates.put(((HistoricVariableUpdate) historicDetail).getVariableName(), ((HistoricVariableUpdate) historicDetail).getValue());
-        return updates;
     }
 }

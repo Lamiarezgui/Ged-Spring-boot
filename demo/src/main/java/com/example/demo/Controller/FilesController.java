@@ -121,14 +121,16 @@ public class FilesController {
     }
 
     // countFiles
+    @PreAuthorize("hasAnyRole('ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/countfilesPerMonth")
     public List<Object> countFiles() {
         System.out.println(fichierRepository.countFilesMonth());
         return fichierRepository.countFilesMonth();
 
     }
-    // countFiles
 
+    // countFiles
+    @PreAuthorize("hasAnyRole('ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/countfilesPerYear")
     public List<Object> countFilesperYear() {
         System.out.println(fichierRepository.countFilesYear());
@@ -136,6 +138,7 @@ public class FilesController {
 
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/countfilesPerDay")
     public List<Object> countFilesperDay() {
         System.out.println(fichierRepository.countFilesDay());
@@ -164,6 +167,7 @@ public class FilesController {
                 .body(fileEntity.getData());
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_SUPERVISEUR','ROLE_INGENIEUR')")
     @GetMapping("/countexported")
     public List<Object> countvar() {
         return fichierRepository.countFilesExportedbyName();
