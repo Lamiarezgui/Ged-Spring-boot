@@ -6,9 +6,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
+
 @Repository
 public interface Users_groupesRepository extends JpaRepository<Users_groupes, Long> {
-    @Query("update Users_groupes f set  f.users.id=NULL where f.users.id=:id")
+    @Query("delete from Users_groupes f where f.users.id=:id")
     @Modifying
+    @Transactional
     void update(long id);
 }

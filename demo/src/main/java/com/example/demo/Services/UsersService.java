@@ -81,10 +81,11 @@ public class UsersService implements UserDetailsService {
     public void update(long id) {
         fichierRepository.updat(id);
         versionRepository.updat(id);
+
     }
 
     public void del(Users user) {
-
+        users_groupesRepository.update(user.getId());
         usersRepository.delete(user);
     }
 
