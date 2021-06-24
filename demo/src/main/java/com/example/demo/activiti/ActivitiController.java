@@ -44,7 +44,7 @@ public class ActivitiController {
     @PostMapping("/start-process")
     public String startProcess(@RequestBody FormRepresentation formRepresentation) {
         Map<String, Object> variables = new HashMap<>();
-        Format f = new SimpleDateFormat("dd/MM/yyyy");
+        Format f = new SimpleDateFormat("dd/MMMM/yyyy",Locale.FRANCE);
         variables.put("task", formRepresentation.getTask());
         variables.put("de", f.format(formRepresentation.getDe()));
         variables.put("description", formRepresentation.getDescription());
