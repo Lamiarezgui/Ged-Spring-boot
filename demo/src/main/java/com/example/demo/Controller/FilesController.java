@@ -250,7 +250,7 @@ public class FilesController {
 
 
         try {
-            Process proc = Runtime.getRuntime().exec(new String[]{"demo/main.exe"});
+            Process proc = Runtime.getRuntime().exec(new String[]{"C:/Users/rezgu/PycharmProjects/pythonProject/dist/main.exe"});
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()));
             BufferedReader stdError = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
             String s = null;

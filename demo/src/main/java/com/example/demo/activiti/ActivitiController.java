@@ -20,6 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,25 +44,25 @@ public class ActivitiController {
     @PostMapping("/start-process")
     public String startProcess(@RequestBody FormRepresentation formRepresentation) {
         Map<String, Object> variables = new HashMap<>();
+        Format f = new SimpleDateFormat("dd/MM/yyyy");
         variables.put("task", formRepresentation.getTask());
-        variables.put("de", formRepresentation.getDe());
+        variables.put("de", f.format(formRepresentation.getDe()));
         variables.put("description", formRepresentation.getDescription());
-        variables.put("ddl", formRepresentation.getDdl());
+        variables.put("ddl", f.format(formRepresentation.getDdl()));
         variables.put("employe", formRepresentation.getEmploye());
         runtimeService.startProcessInstanceByKey("gestiondestaches", variables);
         Users user = usersRepository.getOne(formRepresentation.getEmploye());
         Users email = usersRepository.findByEmail(user.getEmail());
-        String link = "http://localhost:3000/ ";
         emailSender.send(
                 email.getEmail(),
-                buildEmail(email.getFirstName(), email.getLastName(), link), "vous avez une nouvelle tache");
+                buildEmail(email.getFirstName(), email.getLastName()), "vous avez une nouvelle tache");
 
 
         return "Process started. Number of currently running process instances = " + runtimeService.createProcessInstanceQuery()
                 .count();
     }
 
-    private String buildEmail(String firstName, String lastName, String link) {
+    private String buildEmail(String firstName, String lastName) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +
                 "<span style=\"display:none;font-size:1px;color:#fff;max-height:0\"></span>\n" +
@@ -75,8 +78,8 @@ public class ActivitiController {
                 "    <tr>\n" +
                 "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
                 "        \n" +
-                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + firstName + " " + lastName + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> vous avez une nouvelle tache à faire </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\">" +
-                "<p style=\\\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + " \">Voir vos taches </a> </p><p>Have a good Day</p>" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + firstName + " " + lastName + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Vous avez une nouvelle tache à faire </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\">" +
+                "<p style=\\\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">n'oubliez pas de consulter vos taches </p><p>Bonne journée</p>" +
                 "        \n" +
                 "      </td>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
