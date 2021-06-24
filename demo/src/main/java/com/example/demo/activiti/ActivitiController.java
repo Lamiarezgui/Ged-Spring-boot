@@ -183,8 +183,6 @@ public class ActivitiController {
     @GetMapping("/countcompletedTasks")
     public long count() {
         return historyService.createHistoricTaskInstanceQuery().finished()
-                .orderByTaskAssignee()
-                .desc()
                 .count();
     }
 
